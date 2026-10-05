@@ -1,9 +1,9 @@
 # Forever Beta API notes
 
 This implementation targets World of Warcraft: Forever Beta only. Sources were
-reviewed on 5 October 2026. No addon was installed in a game client and no game,
-mock, or automated tests were run; the user's first game run remains the first
-runtime test.
+reviewed on 5 October 2026. The user's first game export exposed a logout-time
+capture bug. Regression checks now exercise the actual Lua addon sources against
+simulated APIs; a fresh in-game export still verifies compatibility with the beta.
 
 The authoritative material used for collector signatures is Blizzard-authored
 interface source and generated API documentation, publicly mirrored in the
@@ -43,7 +43,10 @@ claim that build 69913 is the newest beta build on the review date.
 | Item details | [ItemDocumentation.lua](https://raw.githubusercontent.com/Gethe/wow-ui-source/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated/ItemDocumentation.lua) | `C_Item.GetItemInfo`, actual item level and stat maps. Uncached item details are requested and refreshed on data-load events. Full links preserve enchants, suffixes and other variants. |
 | Equipment slots | [Camelot/PaperDollFrame.lua](https://raw.githubusercontent.com/Gethe/wow-ui-source/forever/Interface/AddOns/Blizzard_UIPanels_Game/Camelot/PaperDollFrame.lua), [PaperDollInfoDocumentation.lua](https://raw.githubusercontent.com/Gethe/wow-ui-source/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated/PaperDollInfoDocumentation.lua) | `C_PaperDollInfo.GetInventorySlotInfo` resolves equipment, ranged and ammo slot tokens; the loaded Camelot code verifies the inventory link/count/durability globals that remain available. |
 
-The talent collector follows the loaded Camelot implementation, not old Classic
+The talent collector selects the active configuration through Camelot's
+`C_SpecializationInfo.GetCombatConfigIDForSpecGroup` route first, with
+`C_ClassTalents.GetActiveConfigID` as an optional fallback. It follows the loaded
+Camelot implementation, not old Classic
 talent-tab APIs that happen to appear in other clients. Unapplied talent edits
 are flagged with `hasStagedChanges`; tree currency requests exclude staged
 changes while group currencies use the active configuration API. `activeRank` records active ranks, while `currentRank` and
@@ -60,10 +63,14 @@ coverage warnings; one failed collector cannot prevent the others from saving.
 
 Snapshots refresh after login and relevant character, quest, trait, bag,
 equipment and item-cache events. Events are debounced with a three-second upper
-bound during continuous activity. Logout captures synchronously before
-SavedVariables serialization. Reload/logout is still required for the separate
-companion to see an updated on-disk export. Earlier snapshots retain their actual
-observation times when collection is restricted.
+bound during continuous activity. Collection begins only after entering the
+world and stops on leaving the world or logout. WoW saves the latest in-session
+snapshot without collecting again during shutdown, when APIs can already return
+zero money/XP, empty bags/equipment/completed quests, or no talent configuration.
+An initial warm-up refresh and bounded retries collect sections that are still
+loading after login. Reload/logout is still required for the separate companion
+to see an updated on-disk export. Retained snapshots keep their actual observation
+times, including when collection is restricted.
 
 The shared export prototype is defined in [DATA-CONTRACT.md](DATA-CONTRACT.md),
 [export.schema.json](../schemas/export.schema.json) and the addon

@@ -101,16 +101,23 @@ end
 function ns.Collectors.talents(context)
     local data = ns.Schema.EmptyData("talents")
     if not Api.Require(context, {
-        "C_ClassTalents.GetActiveConfigID", "C_Traits.GetConfigInfo", "C_Traits.GetTreeNodes",
+        "C_Traits.GetConfigInfo", "C_Traits.GetTreeNodes",
         "C_Traits.GetNodeInfo", "C_Traits.GetEntryInfo", "C_Traits.GetDefinitionInfo",
     }) then return data end
-    data.activeSpecGroup = Api.Call(context, "C_SpecializationInfo.GetActiveSpecGroup")
-    data.activeConfigId = Api.Call(context, "C_ClassTalents.GetActiveConfigID")
-    -- Forever's own Camelot UI uses this mapping for dual specialization tabs.
-    if not data.activeConfigId and type(data.activeSpecGroup) == "number" then
+    if Api.Function("C_SpecializationInfo.GetActiveSpecGroup") then
+        data.activeSpecGroup = Api.Call(context, "C_SpecializationInfo.GetActiveSpecGroup")
+    end
+    -- Forever's Camelot UI chooses configurations through its spec-group tabs.
+    -- Prefer that route; the shared class-talents helper can be nil on Forever.
+    if type(data.activeSpecGroup) == "number" and data.activeSpecGroup > 0
+        and Api.Function("C_SpecializationInfo.GetCombatConfigIDForSpecGroup") then
         data.activeConfigId = Api.Call(context, "C_SpecializationInfo.GetCombatConfigIDForSpecGroup", data.activeSpecGroup)
     end
-    if type(data.activeConfigId) ~= "number" then
+    if (type(data.activeConfigId) ~= "number" or data.activeConfigId <= 0)
+        and Api.Function("C_ClassTalents.GetActiveConfigID") then
+        data.activeConfigId = Api.Call(context, "C_ClassTalents.GetActiveConfigID")
+    end
+    if type(data.activeConfigId) ~= "number" or data.activeConfigId <= 0 then
         Api.Warn(context, "The active talent configuration is not available yet.")
         return data
     end

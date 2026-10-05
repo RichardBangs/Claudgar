@@ -7,11 +7,13 @@ Claudgar exports WoW Forever Beta character data into a portable Windows app. Br
 
 Run `dist/win-x64/Claudgar.exe`. The published executable includes its dependencies; no .NET installation, web server, administrator access, or separate Claudgar installer is required. Windows 10/11 x64 is the initial target.
 
-On first launch, Claudgar finds your Forever Beta installation, installs its addon and user Codex skill, and registers the local Codex connection. Choose the game folder when detection is missing or ambiguous. Existing unrelated or locally modified files are preserved and setup conflicts are shown in **Setup & status**.
+On first launch, Claudgar finds your Forever Beta installation, installs its addon and user Codex skill, and registers the local Codex connection. It checks the default `C:\Program Files (x86)\World of Warcraft\_classic_beta_` installation and Battle.net locations. When detection is missing or ambiguous, the welcome screen highlights **CHOOSE GAME FOLDER**. Existing unrelated or locally modified files are preserved and setup conflicts are shown in **Setup & status**.
 
-Enter the game with the addon enabled, then `/reload` or log out to save an export. In Claudgar, select a character and browse each section. Expand the navigation tree or double-click a collection/record; search collections, page through results, and view or copy every field as JSON. **Save character JSON** saves the selected character's full validated data. Coverage and collection times appear with each section.
+Enter the game with the addon enabled, then `/reload` or log out to save an export. Claudgar checks saved-file timestamps every three seconds and when its window gains focus, and reloads changed data automatically. Select a character and browse each section. Expand the navigation tree or double-click a collection/record; search collections, page through results, and view or copy fields as JSON. Coverage and collection times appear with each section. Folder selection and repair actions appear only when setup needs attention.
 
-Keep Claudgar running when asking Codex about your character. Restart Codex after setup if the connection or skill is not visible. Closing the window hides it in the tray; **Exit Claudgar** stops the app. Open it again after a computer restart.
+The addon collects while your character is in the world and retains that snapshot during loading screens and logout. This avoids overwriting your items, completed quests, talents, money, and XP with the empty/default values game APIs can return during shutdown. After updating the addon, enter the world, wait a few seconds, and `/reload` or log out to replace an earlier incomplete export.
+
+Keep Claudgar running when asking Codex about your character. Restart Codex after setup if the connection or skill is not visible. Minimising or closing the window hides it in the tray; double-click the pixel portrait to reopen it, or use **Exit Claudgar** to stop the app. Open it again after a computer restart.
 
 The addon collects all five sections in the first version. Bank, mail, auctions, other WoW clients, and gameplay automation are outside its scope. ChatGPT/Claude connections will follow later. Character data requested through Codex is processed by the model provider.
 
@@ -41,4 +43,11 @@ A package-free regression suite is supplied for the Lua parser, schema, safe rea
 dotnet run --project tests/Claudgar.Core.Tests
 ```
 
-The first version was compiled and packaged, but the application, addon, and automated tests were deliberately not run at the user's request. Game API availability and end-to-end Codex behavior remain to be verified in the first manual test.
+Addon regression checks load the actual Lua sources against simulated game APIs, including loading screens, logout teardown, late-loading data, and genuine empty/zero values. Run them with Lua 5.1 or with Python and Lupa:
+
+```powershell
+lua tests/addon/run.lua
+python tests/addon/run.py
+```
+
+The first in-game export exposed a logout capture bug, now covered by regression tests. Simulated APIs and successful builds do not replace checking a fresh export in the Forever client.

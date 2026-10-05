@@ -182,6 +182,27 @@ internal static class SetupRegressionTests
         Assert(!discovery.Validate(retail).IsValid, "Explicit Retail selection was accepted as Forever.");
     });
 
+    public static void GameDiscoveryFindsRootOrBetaDirectory() => InTemporaryFolder(folder =>
+    {
+        var root = Path.Combine(folder, "World of Warcraft");
+        var beta = Path.Combine(root, GameDiscovery.ClientDirectoryName);
+        Directory.CreateDirectory(beta);
+        File.WriteAllBytes(Path.Combine(beta, "WowB.exe"), []);
+        File.WriteAllText(Path.Combine(root, ".build.info"),
+            "Version!STRING:0|Product!STRING:0|Active!DEC:1\n1.60.1.69913|wow_classic_beta|1\n");
+        var discovery = new GameDiscovery();
+        var found = discovery.Discover([root, beta, root + Path.DirectorySeparatorChar]);
+        Assert(found.Count(game => game.GameDirectory == beta) == 1,
+            "Root and beta candidates did not resolve to one installation.");
+        Assert(discovery.SuggestDirectory([root]) == beta && discovery.SuggestDirectory([beta]) == beta,
+            "Manual selection did not start in the existing beta directory.");
+        File.Delete(Path.Combine(beta, "WowB.exe"));
+        Assert(!discovery.Discover([root]).Any(game => game.GameDirectory == beta),
+            "An incomplete install was accepted during discovery.");
+        Assert(discovery.SuggestDirectory([root]) == beta,
+            "An incomplete install should still be offered as a manual-selection starting point.");
+    });
+
     public static void InTemporaryFolder(Action<string> test)
     {
         var tempRoot = Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);

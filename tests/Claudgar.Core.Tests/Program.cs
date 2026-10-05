@@ -12,6 +12,11 @@ var tests = new (string Name, Action Run)[]
     ("Characters remain isolated across accounts and installations", CharacterIsolation),
     ("Every query rereads files and corrupt or missing files retain labeled cache", RefreshAndCache),
     ("A bad account does not hide another account", BadAccountIsolation),
+    ("Export checks compare metadata without opening saved data", ExportChangeTrackerTests.MetadataChanges),
+    ("Export checks discover added and deleted files and installations", ExportChangeTrackerTests.DiscoveryChanges),
+    ("Failed refreshes and changes during refresh are retried", ExportChangeTrackerTests.UnacceptedReadsAreRetried),
+    ("Incomplete export discovery remains eligible for retry", ExportChangeTrackerTests.IncompleteDiscoveryIsRetried),
+    ("Setup health detects missing and changed files without writing", SetupHealthRegressionTests.SetupHealthChecksAreReadOnlyAndDetectIssues),
     ("Managed TOML preserves unrelated and multiline configuration", SetupRegressionTests.ManagedTomlPreservesUnrelatedConfiguration),
     ("Conflicting user MCP configuration is preserved", SetupRegressionTests.ConflictingTomlIsPreserved),
     ("Owned installs are repeatable and preserve user changes", SetupRegressionTests.OwnedInstallIsRepeatableAndPreservesChanges),
@@ -19,6 +24,7 @@ var tests = new (string Name, Action Run)[]
     ("Interrupted owned installs can resume", SetupRegressionTests.InterruptedOwnedInstallCanResume),
     ("Malformed settings and unrelated settings are preserved", SetupRegressionTests.MalformedSettingsArePreserved),
     ("Forever beta validation discriminates the shared beta slot", SetupRegressionTests.ForeverValidationDiscriminatesSharedBetaSlot),
+    ("Game discovery resolves root and beta paths and suggests the existing folder", SetupRegressionTests.GameDiscoveryFindsRootOrBetaDirectory),
 };
 var failed = 0;
 foreach (var test in tests)

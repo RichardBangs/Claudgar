@@ -13,7 +13,7 @@ local slotNames = {
 
 function ns.Collectors.equipment(context)
     local data = ns.Schema.EmptyData("equipment")
-    if not Api.Require(context, { "C_PaperDollInfo.GetInventorySlotInfo", "GetInventoryItemID", "GetInventoryItemLink", "C_Item.GetItemInfo" }) then return data end
+    if not Api.Require(context, { "C_PaperDollInfo.GetInventorySlotInfo", "GetInventoryItemID", "GetInventoryItemLink" }) then return data end
     for _, slotName in ipairs(slotNames) do
         local slot = Api.Call(context, "C_PaperDollInfo.GetInventorySlotInfo", slotName)
         if type(slot) == "number" then

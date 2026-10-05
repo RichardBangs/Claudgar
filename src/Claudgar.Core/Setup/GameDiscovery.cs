@@ -12,20 +12,41 @@ public sealed class GameDiscovery
 
     public IReadOnlyList<GameInstallation> Discover(IEnumerable<string>? savedDirectories = null)
     {
-        var candidates = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var saved in savedDirectories ?? []) if (!string.IsNullOrWhiteSpace(saved)) candidates.Add(saved);
-        foreach (var root in CommonRoots()) candidates.Add(root);
-        foreach (var root in BattleNetRoots()) candidates.Add(root);
-        if (OperatingSystem.IsWindows())
-            foreach (var root in RegistryRoots()) candidates.Add(root);
-
         var found = new Dictionary<string, GameInstallation>(StringComparer.OrdinalIgnoreCase);
-        foreach (var candidate in candidates.Take(128))
+        foreach (var candidate in CandidateDirectories(savedDirectories))
         {
             var validation = Validate(candidate);
             if (validation.Installation is { } installation) found[installation.GameDirectory] = installation;
         }
         return found.Values.OrderBy(installation => installation.GameDirectory, StringComparer.OrdinalIgnoreCase).ToArray();
+    }
+
+    /// <summary>Starts manual selection near a known game folder, even when installation is incomplete.</summary>
+    public string SuggestDirectory(IEnumerable<string>? savedDirectories = null)
+    {
+        foreach (var candidate in CandidateDirectories(savedDirectories))
+        {
+            try
+            {
+                var root = Path.GetFullPath(candidate).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                var beta = Path.Combine(root, ClientDirectoryName);
+                if (Directory.Exists(beta)) return beta;
+                if (Directory.Exists(root)) return root;
+            }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException) { }
+        }
+        return Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+    }
+
+    private static IEnumerable<string> CandidateDirectories(IEnumerable<string>? savedDirectories)
+    {
+        var candidates = new List<string>();
+        candidates.AddRange(savedDirectories ?? []);
+        candidates.AddRange(CommonRoots());
+        candidates.AddRange(BattleNetRoots());
+        if (OperatingSystem.IsWindows()) candidates.AddRange(RegistryRoots());
+        return candidates.Where(path => !string.IsNullOrWhiteSpace(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase).Take(128);
     }
 
     public GameValidationResult Validate(string selectedDirectory)
@@ -72,8 +93,10 @@ public sealed class GameDiscovery
 
     private static IEnumerable<string> CommonRoots()
     {
-        foreach (var programFiles in new[] { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) }.Where(path => !string.IsNullOrEmpty(path)))
+        // Check the standard Battle.net default first, including on systems whose app architecture
+        // changes the ProgramFiles environment value.
+        foreach (var programFiles in new[] { Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+                     Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) }.Where(path => !string.IsNullOrEmpty(path)))
         {
             yield return Path.Combine(programFiles, "World of Warcraft");
             yield return Path.Combine(programFiles, "Battle.net", "World of Warcraft");
@@ -84,6 +107,7 @@ public sealed class GameDiscovery
             yield return Path.Combine(drive.Name, "Games", "World of Warcraft");
             yield return Path.Combine(drive.Name, "Battle.net", "World of Warcraft");
             yield return Path.Combine(drive.Name, "Program Files (x86)", "World of Warcraft");
+            yield return Path.Combine(drive.Name, "Program Files", "World of Warcraft");
         }
     }
 
@@ -99,7 +123,11 @@ public sealed class GameDiscovery
             if (document.RootElement.TryGetProperty("Client", out var client) && client.TryGetProperty("Install", out var install) &&
                 install.TryGetProperty("DefaultInstallPath", out var preference) && preference.ValueKind == JsonValueKind.String &&
                 preference.GetString() is { Length: > 0 } root)
+            {
+                // Battle.net can store either the parent install location or the game folder itself.
+                paths.Add(root);
                 paths.Add(Path.Combine(root, "World of Warcraft"));
+            }
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or JsonException or InvalidOperationException or ArgumentException) { }
         return paths;

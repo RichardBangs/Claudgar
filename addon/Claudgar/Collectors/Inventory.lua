@@ -45,7 +45,7 @@ end
 
 function ns.Collectors.inventory(context)
     local data = ns.Schema.EmptyData("inventory")
-    if not Api.Require(context, { "C_Container.GetContainerNumSlots", "C_Container.GetContainerItemInfo", "C_Item.GetItemInfo" }) then return data end
+    if not Api.Require(context, { "C_Container.GetContainerNumSlots", "C_Container.GetContainerItemInfo" }) then return data end
     local lastBag = NUM_TOTAL_EQUIPPED_BAG_SLOTS or NUM_BAG_SLOTS
     if type(lastBag) ~= "number" or lastBag < 0 or lastBag > 10 then
         Api.Warn(context, "The equipped bag count is unavailable in this Forever build.")
@@ -56,6 +56,11 @@ function ns.Collectors.inventory(context)
     for bagId = 0, lastBag do
         local bag = CollectBag(context, bagId)
         if bag then data.bags[#data.bags + 1] = bag end
+        -- The backpack always has slots. A zero here means the container data
+        -- is still loading, not that this character has an empty inventory.
+        if bagId == 0 and (not bag or bag.slotCount == 0) then
+            Api.Warn(context, "The backpack is not available yet; carried inventory is still loading.")
+        end
     end
     -- The Forever branch's loaded ContainerFrame also includes the carried
     -- keyring when the game exposes it; it is not a bank container.

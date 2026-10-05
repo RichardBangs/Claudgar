@@ -14,3 +14,6 @@ The project is currently in the design stage. See the [design specification draf
 
 Make sure to split code up such that a class or file has a single responsibility. It is important that code is easy to read, understand, both for a human and an LLM, and that the code is easily extendable. Architecture and Easy to Read and Maintain code is a top priority. Tests should be written where it makes sense, and after a major change should be run to gain confidence.
 
+# Rules
+
+Please do NOT launch World of Warcraft, or interact with it, as this might break ToS with Blizzard. Also be careful to keep any LUA code within the ToS too. I do not want my account banned!!

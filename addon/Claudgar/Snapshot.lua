@@ -1,6 +1,6 @@
 local _, ns = ...
 local Api = ns.Api
-ns.Snapshot = { ready = false, lastCharacterKey = nil, message = "Waiting for character login." }
+ns.Snapshot = { ready = false, inWorld = false, lastCharacterKey = nil, message = "Waiting for character login." }
 
 function ns.Snapshot.Initialize()
     if not ns.enabled then return false end
@@ -17,10 +17,29 @@ function ns.Snapshot.Initialize()
     return true
 end
 
+function ns.Snapshot.SetSessionReadable(readable)
+    ns.Snapshot.inWorld = readable == true
+    if not ns.Snapshot.inWorld then
+        ns.Snapshot.message = "Collection is paused while the character leaves the world. Earlier observation times are retained."
+    end
+end
+
 function ns.Snapshot.IsRestricted()
+    if not ns.Snapshot.inWorld then return true end
     if type(InCombatLockdown) ~= "function" then return true end
     local ok, restricted = pcall(InCombatLockdown)
     return not ok or restricted ~= false
+end
+
+function ns.Snapshot.RetrySections()
+    local character = ns.Snapshot.lastCharacterKey and ClaudgarDB.characters[ns.Snapshot.lastCharacterKey]
+    if type(character) ~= "table" or type(character.sections) ~= "table" then return ns.Schema.sectionNames end
+    local names = {}
+    for _, name in ipairs(ns.Schema.sectionNames) do
+        local section = character.sections[name]
+        if type(section) ~= "table" or section.status ~= "complete" then names[#names + 1] = name end
+    end
+    return names
 end
 
 local function Collect(name, observedAt)
@@ -45,6 +64,10 @@ end
 
 function ns.Snapshot.Capture(dirty)
     if not ns.Snapshot.ready then return false end
+    if not ns.Snapshot.inWorld then
+        ns.Snapshot.message = "Collection is paused while the character leaves the world. Earlier observation times are retained."
+        return false
+    end
     if ns.Snapshot.IsRestricted() then
         ns.Snapshot.message = "Collection is deferred until combat ends. Earlier observation times are retained."
         return false
