@@ -1,0 +1,2 @@
+TalentTreeLayoutTests.Run();
+EquipmentPresentationTests.Run();

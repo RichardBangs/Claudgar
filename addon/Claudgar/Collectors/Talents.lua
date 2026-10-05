@@ -12,6 +12,13 @@ local nodeFields = {
     isVisible = { "isVisible", "boolean", true }, posX = { "posX", "number" }, posY = { "posY", "number" },
 }
 
+local function IconFileId(context, value)
+    local icon = Api.Typed(context, value, "number", "Talent icon")
+    -- Zero is truthy in Lua but is not a usable icon; negative IDs are temporary.
+    if icon and icon > 0 then return icon end
+    return nil
+end
+
 local function Currencies(context, raw)
     local result = {}
     for _, info in ipairs(Api.Array(context, raw, "Talent currencies")) do
@@ -22,6 +29,29 @@ local function Currencies(context, raw)
         end
     end
     return result
+end
+
+local function Relationships(context, info, node)
+    node.groupIds, node.visibleEdges = {}, {}
+    if info.groupIDs ~= nil then
+        for _, groupId in ipairs(Api.Array(context, info.groupIDs, "Talent node groups")) do
+            if type(groupId) == "number" then node.groupIds[#node.groupIds + 1] = groupId end
+        end
+    end
+    if info.visibleEdges ~= nil then
+        for _, edge in ipairs(Api.Array(context, info.visibleEdges, "Talent connections")) do
+            if type(edge) == "table" then
+                local connection = Api.Fields(context, edge, {
+                    targetNodeId = { "targetNode", "number", true },
+                    edgeType = { "type", "number" }, visualStyle = { "visualStyle", "number" },
+                    isActive = { "isActive", "boolean" },
+                })
+                if connection.targetNodeId then node.visibleEdges[#node.visibleEdges + 1] = connection end
+            else
+                Api.Warn(context, "A talent connection is not available.")
+            end
+        end
+    end
 end
 
 local function Entries(context, configId, info, node)
@@ -49,9 +79,13 @@ local function Entries(context, configId, info, node)
                     if type(definition) == "table" then
                         entry.spellId = Api.Typed(context, definition.spellID, "number", "Talent spell ID")
                         entry.name = Api.Typed(context, definition.overrideName, "string", "Talent name")
-                        if not entry.name and entry.spellId then
+                        entry.iconFileId = IconFileId(context, definition.overrideIcon)
+                        if (not entry.name or not entry.iconFileId) and entry.spellId then
                             local spell = Api.Call(context, "C_Spell.GetSpellInfo", entry.spellId)
-                            if type(spell) == "table" then entry.name = spell.name end
+                            if type(spell) == "table" then
+                                entry.name = entry.name or Api.Typed(context, spell.name, "string", "Talent name")
+                                entry.iconFileId = entry.iconFileId or IconFileId(context, spell.iconID)
+                            end
                         end
                         if not entry.name then Api.Warn(context, "A talent name is not available.") end
                     else
@@ -140,6 +174,7 @@ function ns.Collectors.talents(context)
                     local info = Api.Call(context, "C_Traits.GetNodeInfo", data.activeConfigId, nodeId)
                     if type(info) == "table" then
                         local node = Api.Fields(context, info, nodeFields)
+                        Relationships(context, info, node)
                         node.entries = Entries(context, data.activeConfigId, info, node)
                         tree.nodes[#tree.nodes + 1] = node
                     else

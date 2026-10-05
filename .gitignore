@@ -34,7 +34,7 @@ luac.out
 # Executables
 *.exe
 *.out
-*.app
+/*.app/
 *.i*86
 *.x86_64
 *.hex
@@ -46,4 +46,12 @@ luac.out
 dist/
 .vs/
 *.user
+
+# Temporary work files and incomplete downloads
+/.tmp/
+*.tmp
+*.temp
+*.part
+*.crdownload
+*.download
 

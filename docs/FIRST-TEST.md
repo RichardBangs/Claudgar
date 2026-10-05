@@ -24,16 +24,26 @@ regression tests cover this bug, while game compatibility requires this manual c
    After updating, wait a few seconds in the world before saving. Compare both
    a `/reload` export and a logout export: completed quests, equipment, inventory,
    talents, money, and XP should survive both, with their in-world collection times.
+6. Left-click the Claudgar book button on the minimap while out of combat. The UI
+   should reload and the desktop should automatically receive a fresh export.
+   Left-drag or right-drag the button around the minimap. Releasing a drag should
+   not reload the UI; a separate left-click should still refresh and reload.
+   Check the hover text and that the position persists after reload.
+   Combat clicks should ask you to click again afterward and never reload later
+   automatically.
 
 ## Browse every section
 
 1. Focus the app, wait for its automatic update, and select your character. Verify its name,
    realm, level, class, faction, and location in **Character**.
 2. In **Quests**, double-click **Active** and a quest. Compare its objective text
-   and progress to the quest log. Browse **Completed** IDs separately.
-3. In **Talents**, browse trees, nodes, entries, and currencies. Compare active
-   ranks and available/spent points. Unapplied UI changes should be flagged.
-4. In **Inventory**, browse bags and their items. Compare slot locations, names,
+   and progress to the quest log. Browse **Completed** IDs and any saved names;
+   verify that title search works and unknown names remain labeled as missing.
+3. In **Talents**, compare the tree layout, active ranks, groups, and available/spent
+   points. Select a talent for its details, try pan/zoom, and switch to **JSON tree**
+   to browse trees, nodes, entries, and currencies. Unapplied UI changes should be flagged.
+4. In **Inventory**, compare the bag layout and select item stacks. Try item search
+   and **JSON tree**. Compare slot locations, names,
    quantities, and full item links; browse the carried keyring if it is exposed.
 5. In **Equipment**, compare slots, empty slots, item variants, stats and
    durability. Forever ranged and ammo slots are included when exposed.

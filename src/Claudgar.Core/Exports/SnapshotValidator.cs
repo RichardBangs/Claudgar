@@ -7,7 +7,7 @@ namespace Claudgar.Core.Exports;
 public sealed class SnapshotValidator
 {
     private static readonly HashSet<string> ListFields = new(
-        ["active", "completed", "objectives", "trees", "nodes", "entries", "currencies", "groups", "bags", "items", "warnings"],
+        ["active", "completed", "completedDetails", "objectives", "trees", "nodes", "entries", "visibleEdges", "groupIds", "currencies", "groups", "bags", "items", "warnings"],
         StringComparer.Ordinal);
     private static readonly HashSet<string> StringFields = new(
         ["guid", "name", "realm", "className", "classToken", "raceName", "raceToken", "faction", "locale", "zone",
@@ -21,7 +21,7 @@ public sealed class SnapshotValidator
         ["level", "classId", "raceId", "mapId", "money", "xp", "maxXp", "restedXp", "questId", "suggestedGroup", "frequency",
          "numObjectives", "numFulfilled", "numRequired", "objectiveType", "index", "objectiveIndex", "required", "fulfilled", "activeConfigId", "activeSpecGroup",
          "treeId", "nodeId", "activeEntryId", "activeRank", "currentRank", "ranksPurchased", "maxRanks", "posX", "posY", "entryId",
-         "definitionId", "spellId", "rank", "currencyId", "quantity", "maxQuantity", "spent", "groupId", "iconFileId", "bagId",
+         "definitionId", "spellId", "rank", "targetNodeId", "edgeType", "visualStyle", "currencyId", "quantity", "maxQuantity", "spent", "groupId", "iconFileId", "slotIconFileId", "bagId",
          "slotCount", "freeSlots", "bagFamily", "slot", "itemId", "count", "quality", "itemLevel", "requiredLevel", "subclassId",
          "maxStackCount", "sellPrice", "durability", "maxDurability", "requiredMoney", "logIndex", "objectiveId", "zoneId", "maxLevel"],
         StringComparer.Ordinal);
@@ -128,6 +128,16 @@ public sealed class SnapshotValidator
                     throw Invalid("Completed quests must contain positive quest IDs.");
                 if (data["active"] is JsonArray active && active.Any(value => value is not JsonObject))
                     throw Invalid("Active quests must contain objects.");
+                if (data["completedDetails"] is JsonArray details)
+                {
+                    var seen = new HashSet<long>();
+                    var completedIds = data["completed"] is JsonArray ids
+                        ? ids.Select(value => { TryInteger(value, out var id); return id; }).ToHashSet() : null;
+                    foreach (var detail in details.OfType<JsonObject>())
+                        if (!TryInteger(detail["questId"], out var id) || id < 1 || !seen.Add(id) ||
+                            string.IsNullOrWhiteSpace(ReadString(detail["title"])) || completedIds is not null && !completedIds.Contains(id))
+                            throw Invalid("Completed quest details must have unique completed IDs and saved titles.");
+                }
                 break;
             case "talents": ValidateMainList(data, "trees", status); break;
             case "inventory": ValidateMainList(data, "bags", status); break;
@@ -155,7 +165,9 @@ public sealed class SnapshotValidator
                 if (value is JsonObject { Count: 0 }) table[key] = new JsonArray();
                 else if (value is not JsonArray) throw Invalid($"{path}.{key} must be a list.");
                 var entries = table[key]!.AsArray();
-                if (key != "completed" && key != "warnings" && entries.Any(entry => entry is not JsonObject))
+                if (key == "groupIds" && entries.Any(entry => !TryInteger(entry, out var id) || id < 1))
+                    throw Invalid($"{path}.{key} must contain positive group IDs.");
+                if (key != "completed" && key != "warnings" && key != "groupIds" && entries.Any(entry => entry is not JsonObject))
                     throw Invalid($"{path}.{key} must contain objects.");
             }
             else if (StringFields.Contains(key) && ReadString(value) is null)

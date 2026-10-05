@@ -17,9 +17,13 @@ restricted Lua table syntax; it never runs the file as a Lua program.
 The schema describes the equivalent normalized JSON. Lua keyed tables become
 objects. Dense tables indexed from 1 become arrays. Known list fields such as
 `active`, `completed`, `objectives`, `trees`, `nodes`, `entries`, `currencies`,
-`groups`, `bags`, `items`, and `warnings` convert an empty Lua `{}` to JSON `[]`.
+`groups`, `groupIds`, `visibleEdges`, `completedDetails`, `bags`, `items`, and `warnings` convert an empty Lua `{}` to JSON `[]`.
 An empty keyed table such as `stats` remains `{}`. Sparse lists and mixed numeric
 and string keys are rejected. `nil` fields are omitted by WoW serialization.
+
+Optional root `ui.minimapAngle` stores the addon's radial button position.
+This local display preference is discarded by the desktop validator's public
+projection and is never part of character/MCP responses.
 
 ```lua
 ClaudgarDB = {
@@ -81,11 +85,45 @@ normalizes each field to its declared type before saving.
 in copper. `zone` and `subZone` use the client locale. Some optional map or XP
 fields may be absent while zoning or at a level cap.
 
+Optional `stats` is a string-to-number map of observed player totals, separate
+from the `stats` item-modifier maps in inventory/equipment. Older exports may
+omit it. Unsupported APIs or absent optional values stay omitted; readable zero
+values are retained. Restricted values are omitted with normal coverage warnings.
+The collector does not query current health: Forever restricts `UnitHealth`, and
+the native character-sheet Health value comes from `UnitHealthMax`.
+
+| Character stat tokens | Meaning / units |
+| --- | --- |
+| `strength`, `agility`, `stamina`, `intellect`, `spirit` | Effective `UnitStat` attributes, including buffs/debuffs |
+| `armor` | Effective `UnitArmor` value |
+| `maxHealth` | Maximum health |
+| `power`, `maxPower`, `powerType` | Current displayed resource, maximum and client power-type enum |
+| `mana`, `maxMana` | Mana explicitly queried as power type 0, including alternate mana in forms |
+| `meleeDamageMin`, `meleeDamageMax`, `offhandDamageMin`, `offhandDamageMax` | Current `UnitDamage` ranges; already include modifiers |
+| `rangedDamageMin`, `rangedDamageMax` | Current `UnitRangedDamage` range |
+| `meleeAttackSpeed`, `offhandAttackSpeed`, `rangedAttackSpeed` | Seconds per attack |
+| `meleeAttackPower`, `rangedAttackPower` | Native total: API base + positive + negative components, only when all three are safely readable |
+| `meleeCritChance`, `rangedCritChance`, `spellCritChance` | Percent, from the respective client APIs; Forever spell crit has no school argument |
+| `spellPowerHoly`, `spellPowerFire`, `spellPowerNature`, `spellPowerFrost`, `spellPowerShadow`, `spellPowerArcane` | Bonus damage for magical schools 2 through 7 |
+| `spellPower` | Native general spell-power display: minimum of all six magical-school bonuses; omitted if any school is unreadable |
+| `spellHealing` | Bonus healing from the client API |
+| `manaRegen`, `combatManaRegen` | Mana per second; a five-second display multiplies by 5 |
+
+These values follow the [Forever paper-doll source](https://github.com/Gethe/wow-ui-source/blob/forever/Interface/AddOns/Blizzard_UIPanels_Game/Camelot/PaperDollFrame.lua)
+and its [unit](https://github.com/Gethe/wow-ui-source/blob/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitDocumentation.lua)
+and [player API signatures](https://github.com/Gethe/wow-ui-source/blob/forever/Interface/AddOns/Blizzard_APIDocumentationGenerated/PlayerScriptDocumentation.lua).
+No totals are inferred by summing equipment. Player-only stat/aura events, gear
+changes and talent changes refresh character observations outside combat.
+
 ## Quest data
 
 `active` is an array of quest records. `completed` is an array of positive quest
-IDs returned by the completed-quest API; completed titles/objectives are not
-invented when only IDs are available.
+IDs returned by the completed-quest API. Optional `completedDetails` contains
+`{questId, title}` records for completed IDs whose localized names are known.
+Titles come from active quests, prior saved titles, or bounded in-client title
+lookups. The addon never requests quest loads, and the desktop makes no network
+requests for names. Unknown names remain IDs; missing names do not reduce
+completed-ID coverage.
 
 | Active quest fields | Type |
 | --- | --- |
@@ -107,8 +145,11 @@ The Forever collector uses the client trait APIs. `mode` is `"traits"`.
 
 - `treeId`; `nodes`; `currencies`; and `groups`.
 - Nodes: `nodeId`, `activeEntryId`, `activeRank`, `currentRank`, `ranksPurchased`,
-  `maxRanks`, `posX`, `posY`; booleans `isAvailable`, `isVisible`; and `entries`.
-- Entries: `entryId`, `definitionId`, `spellId`, `rank`, `maxRanks`, `name`,
+  `maxRanks`, `posX`, `posY`; booleans `isAvailable`, `isVisible`; `entries`;
+  optional numeric `groupIds`; and `visibleEdges` from the client node layout.
+- Edges: `targetNodeId`, optional numeric `edgeType`, `visualStyle`, and boolean
+  `isActive`. These describe actual visible dependencies, never guessed links.
+- Entries: `entryId`, `definitionId`, `spellId`, `rank`, `maxRanks`, `name`, `iconFileId`,
   and boolean `isActive`.
 - Currencies: `currencyId`, `quantity`, `maxQuantity`, `spent`.
 - Groups: `groupId`, `name`, `iconFileId`, and their `currencies`.
@@ -127,7 +168,10 @@ inside its enclosing bag. Only carried bags are collected; bank, mail, auction,
 and account storage are outside the first version's scope.
 
 Equipment has `items`: each record has numeric `slot`, string `slotName`,
-boolean `empty`, and available item details. Equipment slot 0 is valid for the
+boolean `empty`, optional numeric `slotIconFileId` for the client's empty-slot
+texture, and available item details. `slotName` is the canonical layout identity;
+`slotIconFileId` is separate from the equipped item's `iconFileId`.
+Equipment slot 0 is valid for the
 Forever ammo slot; don't assume all equipment IDs start at 1. Empty equipment
 slots are explicit. Empty bag slots are derived from capacity and occupied slots.
 

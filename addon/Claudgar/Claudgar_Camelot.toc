@@ -11,7 +11,9 @@
 Schema.lua
 Api.lua
 Client.lua
+Collectors\CharacterStats.lua
 Collectors\Character.lua
+Collectors\QuestNames.lua
 Collectors\Quests.lua
 Collectors\Talents.lua
 Collectors\ItemDetails.lua
@@ -20,3 +22,4 @@ Collectors\Equipment.lua
 Snapshot.lua
 Events.lua
 Commands.lua
+MinimapButton.lua

@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Claudgar</AssemblyName>
+    <Version>0.1.0</Version>
+    <Description>Browse saved WoW Forever Beta character data and share it with local Codex.</Description>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <PublishTrimmed>false</PublishTrimmed>
+    <DebugType>embedded</DebugType>
+    <ApplicationIcon>Resources/Artwork/claudgar.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Claudgar.Core/Claudgar.Core.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
+    <EmbeddedResource Include="../../addon/Claudgar/**/*" LogicalName="Addon/%(RecursiveDir)%(Filename)%(Extension)" />
+    <EmbeddedResource Include="../../skill/claudgar/SKILL.md" LogicalName="Skill/SKILL.md" />
+    <EmbeddedResource Include="Resources/Artwork/*.png" LogicalName="Artwork/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="Resources/Artwork/claudgar.ico" LogicalName="Artwork/claudgar.ico" />
+    <InternalsVisibleTo Include="Claudgar.App.Tests" />
+  </ItemGroup>
+</Project>

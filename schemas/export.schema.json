@@ -45,6 +45,14 @@
       "additionalProperties": {
         "$ref": "#/$defs/characterRecord"
       }
+    },
+    "ui": {
+      "description": "Local addon display preferences; omitted from public character responses.",
+      "type": "object",
+      "properties": {
+        "minimapAngle": { "type": "number" }
+      },
+      "additionalProperties": false
     }
   },
   "required": [
@@ -113,6 +121,9 @@
         },
         "slotName": {
           "type": "string"
+        },
+        "slotIconFileId": {
+          "type": "number"
         },
         "locked": {
           "type": "boolean"
@@ -199,6 +210,12 @@
         },
         "restedXp": {
           "type": "number"
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
         }
       },
       "required": [
@@ -290,6 +307,18 @@
             "type": "integer",
             "minimum": 1
           }
+        },
+        "completedDetails": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "questId": { "type": "integer", "minimum": 1 },
+              "title": { "type": "string", "pattern": "\\S" }
+            },
+            "required": ["questId", "title"],
+            "additionalProperties": false
+          }
         }
       },
       "required": [],
@@ -305,6 +334,9 @@
           "type": "number"
         },
         "spellId": {
+          "type": "number"
+        },
+        "iconFileId": {
           "type": "number"
         },
         "rank": {
@@ -360,6 +392,24 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/talentEntry"
+          }
+        },
+        "groupIds": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1 }
+        },
+        "visibleEdges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "targetNodeId": { "type": "number" },
+              "edgeType": { "type": "number" },
+              "visualStyle": { "type": "number" },
+              "isActive": { "type": "boolean" }
+            },
+            "required": ["targetNodeId"],
+            "additionalProperties": false
           }
         }
       },

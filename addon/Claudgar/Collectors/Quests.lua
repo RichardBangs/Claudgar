@@ -66,5 +66,6 @@ function ns.Collectors.quests(context)
         end
     end
     table.sort(data.completed)
+    data.completedDetails = ns.QuestNames.Completed(context, data)
     return data
 end

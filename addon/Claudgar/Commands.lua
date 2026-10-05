@@ -21,7 +21,7 @@ SlashCmdList.CLAUDGAR = function(command)
                 Print(name .. ": " .. section.status .. " (observed " .. section.observedAt .. ")")
             end
         end
-        Print("Use /claudgar snapshot to refresh, then /reload to write the export to disk.")
+        Print("Click the Claudgar minimap button to refresh and save, or use /claudgar snapshot then /reload.")
     else
         Print("Commands: /claudgar status, /claudgar snapshot. Reload or log out to save.")
     end

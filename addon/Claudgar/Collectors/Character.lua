@@ -21,6 +21,7 @@ function ns.Collectors.character(context)
     data.xp = Api.Call(context, "UnitXP", "player")
     data.maxXp = Api.Call(context, "UnitXPMax", "player")
     data.restedXp = Api.Call(context, "GetXPExhaustion")
+    data.stats = ns.CharacterStats.Collect(context)
     for _, name in ipairs({ "className", "classToken", "raceName", "raceToken", "faction", "zone" }) do
         data[name] = Api.Typed(context, data[name], "string", name, true)
     end

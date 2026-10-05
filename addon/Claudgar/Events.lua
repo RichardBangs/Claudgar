@@ -18,20 +18,30 @@ local eventSections = {
     QUEST_LOG_UPDATE = { "quests" }, QUEST_ACCEPTED = { "quests" },
     QUEST_REMOVED = { "quests" }, QUEST_TURNED_IN = { "quests" },
     QUEST_WATCH_UPDATE = { "quests" }, QUEST_DATA_LOAD_RESULT = { "quests" },
-    PLAYER_TALENT_UPDATE = { "talents" }, ACTIVE_TALENT_GROUP_CHANGED = { "talents" },
-    ACTIVE_COMBAT_CONFIG_CHANGED = { "talents" }, TRAIT_CONFIG_UPDATED = { "talents" },
-    TRAIT_CONFIG_CREATED = { "talents" }, TRAIT_NODE_CHANGED = { "talents" },
-    TRAIT_NODE_CHANGED_PARTIAL = { "talents" }, TRAIT_NODE_ENTRY_UPDATED = { "talents" },
-    TRAIT_TREE_CURRENCY_INFO_UPDATED = { "talents" }, TRAIT_TREE_CHANGED = { "talents" },
+    PLAYER_TALENT_UPDATE = { "talents", "character" }, ACTIVE_TALENT_GROUP_CHANGED = { "talents", "character" },
+    ACTIVE_COMBAT_CONFIG_CHANGED = { "talents", "character" }, TRAIT_CONFIG_UPDATED = { "talents", "character" },
+    TRAIT_CONFIG_CREATED = { "talents", "character" }, TRAIT_NODE_CHANGED = { "talents", "character" },
+    TRAIT_NODE_CHANGED_PARTIAL = { "talents", "character" }, TRAIT_NODE_ENTRY_UPDATED = { "talents", "character" },
+    TRAIT_TREE_CURRENCY_INFO_UPDATED = { "talents", "character" }, TRAIT_TREE_CHANGED = { "talents", "character" },
     SPELL_DATA_LOAD_RESULT = { "talents" },
     ADDON_RESTRICTION_STATE_CHANGED = { "character", "quests", "talents", "inventory", "equipment" },
     BAG_UPDATE_DELAYED = { "inventory" }, BAG_UPDATE = { "inventory" },
-    PLAYER_EQUIPMENT_CHANGED = { "equipment", "inventory" },
-    UNIT_INVENTORY_CHANGED = { "inventory", "equipment" },
+    PLAYER_EQUIPMENT_CHANGED = { "equipment", "inventory", "character" },
+    UNIT_INVENTORY_CHANGED = { "inventory", "equipment", "character" },
     UPDATE_INVENTORY_DURABILITY = { "inventory", "equipment" },
     GET_ITEM_INFO_RECEIVED = { "inventory", "equipment" },
     ITEM_DATA_LOAD_RESULT = { "inventory", "equipment" },
 }
+
+-- Optional player-only paper-doll updates. Unsupported events do not reduce
+-- identity coverage; equipment/talent changes and full captures still refresh.
+local statUnitEvents = {
+    UNIT_STATS = true, UNIT_RESISTANCES = true, UNIT_ATTACK_POWER = true,
+    UNIT_RANGED_ATTACK_POWER = true, UNIT_DAMAGE = true, UNIT_ATTACK_SPEED = true,
+    UNIT_MAXHEALTH = true, UNIT_MAXPOWER = true, UNIT_POWER_UPDATE = true,
+    UNIT_DISPLAYPOWER = true, UNIT_AURA = true,
+}
+for event in pairs(statUnitEvents) do eventSections[event] = { "character" } end
 
 function ns.Events.Schedule(sections, delay)
     for _, name in ipairs(sections or ns.Schema.sectionNames) do dirty[name] = true end
@@ -42,9 +52,9 @@ function ns.Events.Schedule(sections, delay)
     dueAt = math.min(now + (delay or 0.75), pendingAt + 3)
 end
 
-local function Register(event, sections)
+local function Register(event, sections, optional)
     local ok = pcall(frame.RegisterEvent, frame, event)
-    if not ok then
+    if not ok and not optional then
         for _, name in ipairs(sections or ns.Schema.sectionNames) do
             ns.eventWarnings[name] = ns.eventWarnings[name] or {}
             ns.eventWarnings[name][#ns.eventWarnings[name] + 1] =
@@ -59,7 +69,7 @@ Register("PLAYER_ENTERING_WORLD")
 Register("PLAYER_LEAVING_WORLD")
 Register("PLAYER_REGEN_ENABLED")
 Register("PLAYER_LOGOUT")
-for event, sections in pairs(eventSections) do Register(event, sections) end
+for event, sections in pairs(eventSections) do Register(event, sections, statUnitEvents[event]) end
 
 frame:SetScript("OnEvent", function(_, event, argument)
     if event == "ADDON_LOADED" then
@@ -81,9 +91,11 @@ frame:SetScript("OnEvent", function(_, event, argument)
     elseif event == "PLAYER_REGEN_ENABLED" then
         if dueAt then ns.Events.Schedule(nil, 0.5) end
     elseif ns.Snapshot.ready then
-        if event == "UNIT_INVENTORY_CHANGED" or event == "PLAYER_XP_UPDATE" then
+        if statUnitEvents[event] or event == "UNIT_INVENTORY_CHANGED" or event == "PLAYER_XP_UPDATE" then
             -- Unit tokens can be secret too; check before comparing.
-            if type(issecretvalue) == "function" and issecretvalue(argument) then return end
+            if type(issecretvalue) ~= "function" then return end
+            local checked, secret = pcall(issecretvalue, argument)
+            if not checked or secret then return end
             if argument ~= "player" then return end
         end
         ns.Events.Schedule(eventSections[event])

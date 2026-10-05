@@ -15,9 +15,10 @@ function ns.Collectors.equipment(context)
     local data = ns.Schema.EmptyData("equipment")
     if not Api.Require(context, { "C_PaperDollInfo.GetInventorySlotInfo", "GetInventoryItemID", "GetInventoryItemLink" }) then return data end
     for _, slotName in ipairs(slotNames) do
-        local slot = Api.Call(context, "C_PaperDollInfo.GetInventorySlotInfo", slotName)
+        local slot, slotTexture = Api.Call(context, "C_PaperDollInfo.GetInventorySlotInfo", slotName)
         if type(slot) == "number" then
-            local item = { slot = slot, slotName = slotName }
+            local item = { slot = slot, slotName = slotName,
+                slotIconFileId = Api.Typed(context, slotTexture, "number", "Equipment slot texture") }
             local issueCount = context.issueCount
             item.itemId = Api.Call(context, "GetInventoryItemID", "player", slot)
             item.link = Api.Call(context, "GetInventoryItemLink", "player", slot)

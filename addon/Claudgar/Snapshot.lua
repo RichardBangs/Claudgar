@@ -42,8 +42,9 @@ function ns.Snapshot.RetrySections()
     return names
 end
 
-local function Collect(name, observedAt)
+local function Collect(name, observedAt, previous)
     local context = Api.Context()
+    context.previousData = type(previous) == "table" and previous.data or nil
     local ok, data = pcall(ns.Collectors[name], context)
     if not ok or type(data) ~= "table" then
         return ns.Schema.Section(ns.Schema.EmptyData(name), "failed", observedAt,
@@ -95,7 +96,7 @@ function ns.Snapshot.Capture(dirty)
     sections.character = characterSection
     for _, name in ipairs(ns.Schema.sectionNames) do
         if name ~= "character" and (not dirty or dirty[name] or not sections[name]) then
-            sections[name] = Collect(name, observedAt)
+            sections[name] = Collect(name, observedAt, sections[name])
         end
     end
     -- Publish one coherent character record only after all requested collectors

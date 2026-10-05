@@ -1,0 +1,1815 @@
+{
+  "configName": "Native coordinate fixture",
+  "trees": [
+    {
+      "nodes": [
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5730,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Shadowform",
+              "maxRanks": 1,
+              "spellId": 15473,
+              "definitionId": 135347,
+              "entryId": 130546,
+              "iconFileId": 136200,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105817,
+          "groupIds": [
+            11616,
+            11622
+          ],
+          "posX": 9680,
+          "activeEntryId": 130546,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Darkness",
+              "maxRanks": 5,
+              "spellId": 15259,
+              "definitionId": 135348,
+              "entryId": 130547,
+              "iconFileId": 136223,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105818,
+          "groupIds": [
+            11617,
+            11622
+          ],
+          "posX": 10280,
+          "activeEntryId": 130547,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Devouring Contagion",
+              "maxRanks": 2,
+              "spellId": 1309950,
+              "definitionId": 135349,
+              "entryId": 130548,
+              "iconFileId": 252996,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105819,
+          "groupIds": [
+            11618,
+            12770,
+            11622
+          ],
+          "posX": 10280,
+          "activeEntryId": 130548,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105817,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Vampiric Embrace",
+              "maxRanks": 1,
+              "spellId": 15286,
+              "definitionId": 135350,
+              "entryId": 130549,
+              "iconFileId": 136230,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105820,
+          "groupIds": [
+            11619,
+            12770,
+            12771,
+            11622
+          ],
+          "posX": 9680,
+          "activeEntryId": 130549,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Shadow Weaving",
+              "maxRanks": 3,
+              "spellId": 15257,
+              "definitionId": 135351,
+              "entryId": 130550,
+              "iconFileId": 136123,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105821,
+          "groupIds": [
+            11619,
+            12770,
+            11622,
+            12771
+          ],
+          "posX": 10280,
+          "activeEntryId": 130550,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Improved Fade",
+              "maxRanks": 2,
+              "spellId": 15274,
+              "definitionId": 135353,
+              "entryId": 130552,
+              "iconFileId": 135994,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105823,
+          "groupIds": [
+            11619,
+            11622,
+            12771,
+            12770
+          ],
+          "posX": 9080,
+          "activeEntryId": 130552,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Silence",
+              "maxRanks": 1,
+              "spellId": 15487,
+              "definitionId": 135354,
+              "entryId": 130553,
+              "iconFileId": 136164,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105824,
+          "groupIds": [
+            11618,
+            11622,
+            12770
+          ],
+          "posX": 9080,
+          "activeEntryId": 130553,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Improved Mind Flay",
+              "maxRanks": 2,
+              "spellId": 1225139,
+              "definitionId": 135355,
+              "entryId": 130554,
+              "iconFileId": 136213,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105825,
+          "groupIds": [
+            11620,
+            11622,
+            12770,
+            12771,
+            12772
+          ],
+          "posX": 10880,
+          "activeEntryId": 130554,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105825,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Mind Flay",
+              "maxRanks": 1,
+              "spellId": 15407,
+              "definitionId": 135356,
+              "entryId": 130555,
+              "iconFileId": 136208,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105826,
+          "groupIds": [
+            11620,
+            11622,
+            12770,
+            12771,
+            12772
+          ],
+          "posX": 10280,
+          "activeEntryId": 130555,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Improved Mind Blast",
+              "maxRanks": 5,
+              "spellId": 15273,
+              "definitionId": 135357,
+              "entryId": 130556,
+              "iconFileId": 136224,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105827,
+          "groupIds": [
+            11620,
+            11622,
+            12770,
+            12771,
+            12772
+          ],
+          "posX": 9080,
+          "activeEntryId": 130556,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Improved Psychic Scream",
+              "maxRanks": 2,
+              "spellId": 15392,
+              "definitionId": 135358,
+              "entryId": 130557,
+              "iconFileId": 136184,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105828,
+          "groupIds": [
+            11620,
+            11622,
+            12770,
+            12771,
+            12772
+          ],
+          "posX": 9680,
+          "activeEntryId": 130557,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Shadow Reach",
+              "maxRanks": 2,
+              "spellId": 17322,
+              "definitionId": 135359,
+              "entryId": 130558,
+              "iconFileId": 136130,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105829,
+          "groupIds": [
+            11621,
+            11622,
+            12770,
+            12771,
+            12772,
+            12773
+          ],
+          "posX": 10880,
+          "activeEntryId": 130558,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Improved Shadow Word: Pain",
+              "maxRanks": 2,
+              "spellId": 15275,
+              "definitionId": 135360,
+              "entryId": 130559,
+              "iconFileId": 136207,
+              "isActive": true,
+              "rank": 2
+            }
+          ],
+          "ranksPurchased": 2,
+          "nodeId": 105830,
+          "groupIds": [
+            11621,
+            11622,
+            12770,
+            12771,
+            12772,
+            12773
+          ],
+          "posX": 10280,
+          "activeEntryId": 130559,
+          "isAvailable": true,
+          "currentRank": 2,
+          "activeRank": 2
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Shadow Affinity",
+              "maxRanks": 3,
+              "spellId": 15318,
+              "definitionId": 135361,
+              "entryId": 130560,
+              "iconFileId": 136205,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105831,
+          "groupIds": [
+            11621,
+            11622,
+            12770,
+            12771,
+            12772,
+            12773
+          ],
+          "posX": 9080,
+          "activeEntryId": 130560,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105828,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Blackout",
+              "maxRanks": 5,
+              "spellId": 15326,
+              "definitionId": 135362,
+              "entryId": 130561,
+              "iconFileId": 136160,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105832,
+          "groupIds": [
+            11622,
+            12770,
+            12771,
+            12772,
+            12773,
+            12774
+          ],
+          "posX": 9680,
+          "activeEntryId": 130561,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Spirit Tap",
+              "maxRanks": 5,
+              "spellId": 15270,
+              "definitionId": 135363,
+              "entryId": 130562,
+              "iconFileId": 136188,
+              "isActive": true,
+              "rank": 5
+            }
+          ],
+          "ranksPurchased": 5,
+          "nodeId": 105833,
+          "groupIds": [
+            11622,
+            12770,
+            12771,
+            12772,
+            12773,
+            12774
+          ],
+          "posX": 10280,
+          "activeEntryId": 130562,
+          "isAvailable": true,
+          "currentRank": 5,
+          "activeRank": 5
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105836,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Penance",
+              "maxRanks": 1,
+              "spellId": 402174,
+              "definitionId": 135364,
+              "entryId": 130563,
+              "iconFileId": 237545,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105834,
+          "groupIds": [
+            11604,
+            11608,
+            12760
+          ],
+          "posX": 1620,
+          "activeEntryId": 130563,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Renewed Hope",
+              "maxRanks": 5,
+              "spellId": 425280,
+              "definitionId": 135365,
+              "entryId": 130564,
+              "iconFileId": 135923,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105835,
+          "groupIds": [
+            11604,
+            11608,
+            12760
+          ],
+          "posX": 2220,
+          "activeEntryId": 130564,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5730,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Power Infusion",
+              "maxRanks": 1,
+              "spellId": 10060,
+              "definitionId": 135366,
+              "entryId": 130565,
+              "iconFileId": 135939,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105836,
+          "groupIds": [
+            11602,
+            11608
+          ],
+          "posX": 1620,
+          "activeEntryId": 130565,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Mental Strength",
+              "maxRanks": 5,
+              "spellId": 18551,
+              "definitionId": 135367,
+              "entryId": 130566,
+              "iconFileId": 136031,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105837,
+          "groupIds": [
+            11605,
+            11608,
+            12761,
+            12760
+          ],
+          "posX": 1620,
+          "activeEntryId": 130566,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Improved Mana Burn",
+              "maxRanks": 2,
+              "spellId": 14750,
+              "definitionId": 135368,
+              "entryId": 130567,
+              "iconFileId": 136170,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105838,
+          "groupIds": [
+            11605,
+            11608,
+            12760,
+            12761
+          ],
+          "posX": 2820,
+          "activeEntryId": 130567,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105835,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Soul Warding",
+              "maxRanks": 1,
+              "spellId": 402000,
+              "definitionId": 135369,
+              "entryId": 130568,
+              "iconFileId": 135948,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105839,
+          "groupIds": [
+            11605,
+            11608,
+            12760,
+            12761
+          ],
+          "posX": 2220,
+          "activeEntryId": 130568,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5130,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Divine Aegis",
+              "maxRanks": 3,
+              "spellId": 431622,
+              "definitionId": 135370,
+              "entryId": 130569,
+              "iconFileId": 237539,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105840,
+          "groupIds": [
+            11603,
+            11608
+          ],
+          "posX": 2220,
+          "activeEntryId": 130569,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Improved Inner Fire",
+              "maxRanks": 3,
+              "spellId": 14747,
+              "definitionId": 135371,
+              "entryId": 130570,
+              "iconFileId": 135926,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105841,
+          "groupIds": [
+            11605,
+            11608,
+            12760,
+            12761
+          ],
+          "posX": 1020,
+          "activeEntryId": 130570,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Mental Agility",
+              "maxRanks": 3,
+              "spellId": 14520,
+              "definitionId": 135372,
+              "entryId": 130571,
+              "iconFileId": 132156,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105842,
+          "groupIds": [
+            11606,
+            12760,
+            12761,
+            12762,
+            11608
+          ],
+          "posX": 1020,
+          "activeEntryId": 130571,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Meditation",
+              "maxRanks": 3,
+              "spellId": 14521,
+              "definitionId": 135373,
+              "entryId": 130572,
+              "iconFileId": 136090,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105843,
+          "groupIds": [
+            11606,
+            11608,
+            12760,
+            12761,
+            12762
+          ],
+          "posX": 2820,
+          "activeEntryId": 130572,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Inner Focus",
+              "maxRanks": 1,
+              "spellId": 14751,
+              "definitionId": 135374,
+              "entryId": 130573,
+              "iconFileId": 135863,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105844,
+          "groupIds": [
+            11606,
+            11608,
+            12760,
+            12761,
+            12762
+          ],
+          "posX": 1620,
+          "activeEntryId": 130573,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Martyrdom",
+              "maxRanks": 2,
+              "spellId": 14531,
+              "definitionId": 135375,
+              "entryId": 130574,
+              "iconFileId": 136107,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105845,
+          "groupIds": [
+            11607,
+            11608,
+            12760,
+            12761,
+            12762,
+            12763
+          ],
+          "posX": 2820,
+          "activeEntryId": 130574,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105839,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Improved Power Word: Shield",
+              "maxRanks": 3,
+              "spellId": 14748,
+              "definitionId": 135376,
+              "entryId": 130575,
+              "iconFileId": 135940,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105846,
+          "groupIds": [
+            11607,
+            11608,
+            12760,
+            12761,
+            12762,
+            12763
+          ],
+          "posX": 2220,
+          "activeEntryId": 130575,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Silent Resolve",
+              "maxRanks": 3,
+              "spellId": 14523,
+              "definitionId": 135378,
+              "entryId": 130577,
+              "iconFileId": 136053,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105848,
+          "groupIds": [
+            11607,
+            11608,
+            12760,
+            12761,
+            12762,
+            12763
+          ],
+          "posX": 1020,
+          "activeEntryId": 130577,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Twin Disciplines",
+              "maxRanks": 5,
+              "spellId": 1225132,
+              "definitionId": 135379,
+              "entryId": 130578,
+              "iconFileId": 135969,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105849,
+          "groupIds": [
+            11608,
+            12760,
+            12761,
+            12762,
+            12763,
+            12764
+          ],
+          "posX": 2220,
+          "activeEntryId": 130578,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Wand Specialization",
+              "maxRanks": 2,
+              "spellId": 14524,
+              "definitionId": 135380,
+              "entryId": 130579,
+              "iconFileId": 135463,
+              "isActive": true,
+              "rank": 2
+            }
+          ],
+          "ranksPurchased": 2,
+          "nodeId": 105850,
+          "groupIds": [
+            11608,
+            12760,
+            12761,
+            12762,
+            12763,
+            12764
+          ],
+          "posX": 1620,
+          "activeEntryId": 130579,
+          "isAvailable": true,
+          "currentRank": 2,
+          "activeRank": 2
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5730,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Prayer of Mending",
+              "maxRanks": 1,
+              "spellId": 401859,
+              "definitionId": 135381,
+              "entryId": 130580,
+              "iconFileId": 135944,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105851,
+          "groupIds": [
+            11609,
+            11615
+          ],
+          "posX": 5620,
+          "activeEntryId": 130580,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5130,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Spiritual Healing",
+              "maxRanks": 3,
+              "spellId": 14898,
+              "definitionId": 135382,
+              "entryId": 130581,
+              "iconFileId": 136057,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105852,
+          "groupIds": [
+            11610,
+            11615
+          ],
+          "posX": 6220,
+          "activeEntryId": 130581,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Spiritual Guidance",
+              "maxRanks": 5,
+              "spellId": 14901,
+              "definitionId": 135383,
+              "entryId": 130582,
+              "iconFileId": 135977,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105853,
+          "groupIds": [
+            11611,
+            11615,
+            12765
+          ],
+          "posX": 6220,
+          "activeEntryId": 130582,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105851,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Spirit of Redemption",
+              "maxRanks": 1,
+              "spellId": 20711,
+              "definitionId": 135384,
+              "entryId": 130583,
+              "iconFileId": 132864,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105854,
+          "groupIds": [
+            11611,
+            11615,
+            12765
+          ],
+          "posX": 5620,
+          "activeEntryId": 130583,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 4530,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Litany of Light",
+              "maxRanks": 2,
+              "spellId": 1317006,
+              "definitionId": 135385,
+              "entryId": 130584,
+              "iconFileId": 134943,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105855,
+          "groupIds": [
+            11611,
+            11615,
+            12765
+          ],
+          "posX": 5020,
+          "activeEntryId": 130584,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Binding Heal",
+              "maxRanks": 1,
+              "spellId": 401937,
+              "definitionId": 135386,
+              "entryId": 130585,
+              "iconFileId": 135883,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105856,
+          "groupIds": [
+            11612,
+            11615,
+            12765,
+            12766
+          ],
+          "posX": 6820,
+          "activeEntryId": 130585,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Searing Light",
+              "maxRanks": 2,
+              "spellId": 14909,
+              "definitionId": 135387,
+              "entryId": 130586,
+              "iconFileId": 135973,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105857,
+          "groupIds": [
+            11612,
+            11615,
+            12765,
+            12766
+          ],
+          "posX": 6220,
+          "activeEntryId": 130586,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Improved Healing",
+              "maxRanks": 3,
+              "spellId": 14912,
+              "definitionId": 135388,
+              "entryId": 130587,
+              "iconFileId": 135916,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105858,
+          "groupIds": [
+            11612,
+            11615,
+            12765,
+            12766
+          ],
+          "posX": 5620,
+          "activeEntryId": 130587,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3930,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Holy Reach",
+              "maxRanks": 2,
+              "spellId": 27789,
+              "definitionId": 135389,
+              "entryId": 130588,
+              "iconFileId": 135949,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105859,
+          "groupIds": [
+            11612,
+            11615,
+            12765,
+            12766
+          ],
+          "posX": 5020,
+          "activeEntryId": 130588,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Inspiration",
+              "maxRanks": 3,
+              "spellId": 14892,
+              "definitionId": 135390,
+              "entryId": 130589,
+              "iconFileId": 135928,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105860,
+          "groupIds": [
+            11613,
+            11615,
+            12765,
+            12766,
+            12767
+          ],
+          "posX": 6820,
+          "activeEntryId": 130589,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Blessed Recovery",
+              "maxRanks": 3,
+              "spellId": 27811,
+              "definitionId": 135391,
+              "entryId": 130590,
+              "iconFileId": 135877,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105861,
+          "groupIds": [
+            11613,
+            11615,
+            12765,
+            12766,
+            12767
+          ],
+          "posX": 5620,
+          "activeEntryId": 130590,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 3330,
+          "maxRanks": 1,
+          "entries": [
+            {
+              "name": "Holy Nova",
+              "maxRanks": 1,
+              "spellId": 15237,
+              "definitionId": 135392,
+              "entryId": 130591,
+              "iconFileId": 135922,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105862,
+          "groupIds": [
+            11613,
+            11615,
+            12765,
+            12766,
+            12767
+          ],
+          "posX": 5020,
+          "activeEntryId": 130591,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [
+            {
+              "edgeType": 2,
+              "targetNodeId": 105857,
+              "isActive": false,
+              "visualStyle": 1
+            }
+          ],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Divine Fury",
+              "maxRanks": 5,
+              "spellId": 18530,
+              "definitionId": 135393,
+              "entryId": 130592,
+              "iconFileId": 135971,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105863,
+          "groupIds": [
+            11614,
+            11615,
+            12765,
+            12766,
+            12767,
+            12768
+          ],
+          "posX": 6220,
+          "activeEntryId": 130592,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Spell Warding",
+              "maxRanks": 5,
+              "spellId": 27900,
+              "definitionId": 135394,
+              "entryId": 130593,
+              "iconFileId": 135976,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105864,
+          "groupIds": [
+            11614,
+            11615,
+            12765,
+            12766,
+            12767,
+            12768
+          ],
+          "posX": 5620,
+          "activeEntryId": 130593,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 21300,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Holy Specialization",
+              "maxRanks": 5,
+              "spellId": 14889,
+              "definitionId": 135395,
+              "entryId": 130594,
+              "iconFileId": 135967,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105865,
+          "groupIds": [
+            11615
+          ],
+          "posX": 9280,
+          "activeEntryId": 130594,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Improved Renew",
+              "maxRanks": 3,
+              "spellId": 14908,
+              "definitionId": 135396,
+              "entryId": 130595,
+              "iconFileId": 135953,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 105866,
+          "groupIds": [
+            11615,
+            12765,
+            12766,
+            12767,
+            12768,
+            12769
+          ],
+          "posX": 5620,
+          "activeEntryId": 130595,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Twilight Focus",
+              "maxRanks": 3,
+              "spellId": 14913,
+              "definitionId": 135397,
+              "entryId": 130596,
+              "iconFileId": 135918,
+              "isActive": true,
+              "rank": 3
+            }
+          ],
+          "ranksPurchased": 3,
+          "nodeId": 105867,
+          "groupIds": [
+            11615,
+            12765,
+            12766,
+            12767,
+            12768,
+            12769
+          ],
+          "posX": 5020,
+          "activeEntryId": 130596,
+          "isAvailable": true,
+          "currentRank": 3,
+          "activeRank": 3
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Shadow Focus",
+              "maxRanks": 5,
+              "spellId": 15260,
+              "definitionId": 142597,
+              "entryId": 137843,
+              "iconFileId": 136126,
+              "isActive": true,
+              "rank": 1
+            }
+          ],
+          "ranksPurchased": 1,
+          "nodeId": 110851,
+          "groupIds": [
+            12770,
+            12771,
+            12772,
+            12773,
+            12774,
+            11622
+          ],
+          "posX": 9080,
+          "activeEntryId": 137843,
+          "isAvailable": true,
+          "currentRank": 1,
+          "activeRank": 1
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2730,
+          "maxRanks": 3,
+          "entries": [
+            {
+              "name": "Holy Precision",
+              "maxRanks": 3,
+              "spellId": 1309957,
+              "definitionId": 142598,
+              "entryId": 137844,
+              "iconFileId": 135895,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 110852,
+          "groupIds": [
+            11607,
+            12760,
+            12761,
+            12762,
+            12763,
+            11608
+          ],
+          "posX": 1620,
+          "activeEntryId": 137844,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Power in Light",
+              "maxRanks": 5,
+              "spellId": 1309969,
+              "definitionId": 142599,
+              "entryId": 137845,
+              "iconFileId": 135972,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 110853,
+          "groupIds": [
+            12760,
+            12761,
+            12762,
+            12763,
+            12764,
+            11608
+          ],
+          "posX": 1020,
+          "activeEntryId": 137845,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 5130,
+          "maxRanks": 2,
+          "entries": [
+            {
+              "name": "Early Demise",
+              "maxRanks": 2,
+              "spellId": 1310076,
+              "definitionId": 142600,
+              "entryId": 137846,
+              "iconFileId": 136149,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 110854,
+          "groupIds": [
+            11617,
+            11622
+          ],
+          "posX": 9080,
+          "activeEntryId": 137846,
+          "isAvailable": false,
+          "currentRank": 0,
+          "activeRank": 0
+        },
+        {
+          "visibleEdges": [],
+          "isVisible": true,
+          "posY": 2130,
+          "maxRanks": 5,
+          "entries": [
+            {
+              "name": "Holy Specialization",
+              "maxRanks": 5,
+              "spellId": 14889,
+              "definitionId": 142601,
+              "entryId": 137847,
+              "iconFileId": 135967,
+              "isActive": true,
+              "rank": 0
+            }
+          ],
+          "ranksPurchased": 0,
+          "nodeId": 110855,
+          "groupIds": [
+            12765,
+            12766,
+            12767,
+            12768,
+            12769,
+            11615
+          ],
+          "posX": 6220,
+          "activeEntryId": 137847,
+          "isAvailable": true,
+          "currentRank": 0,
+          "activeRank": 0
+        }
+      ],
+      "currencies": [
+        {
+          "spent": 13,
+          "currencyId": 3820,
+          "quantity": 0,
+          "maxQuantity": 13
+        }
+      ],
+      "groups": [
+        {
+          "currencies": [
+            {
+              "spent": 2,
+              "currencyId": 3820,
+              "quantity": 11,
+              "maxQuantity": 13
+            }
+          ],
+          "iconFileId": 135987,
+          "name": "Discipline",
+          "groupId": 11608
+        },
+        {
+          "currencies": [
+            {
+              "spent": 3,
+              "currencyId": 3820,
+              "quantity": 10,
+              "maxQuantity": 13
+            }
+          ],
+          "iconFileId": 135920,
+          "name": "Holy",
+          "groupId": 11615
+        },
+        {
+          "currencies": [
+            {
+              "spent": 8,
+              "currencyId": 3820,
+              "quantity": 5,
+              "maxQuantity": 13
+            }
+          ],
+          "iconFileId": 136207,
+          "name": "Shadow Magic",
+          "groupId": 11622
+        }
+      ],
+      "treeId": 1114
+    }
+  ],
+  "activeSpecGroup": 1,
+  "mode": "traits",
+  "activeConfigId": 1,
+  "hasStagedChanges": false
+}

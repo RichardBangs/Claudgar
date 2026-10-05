@@ -21,9 +21,10 @@ ns.Schema.prototype = {
         classId = "number", className = "string", classToken = "string",
         raceId = "number", raceName = "string", raceToken = "string", faction = "string",
         locale = "string", zone = "string", subZone = "string", mapId = "number",
-        money = "number", xp = "number", maxXp = "number", restedXp = "number",
+        money = "number", xp = "number", maxXp = "number", restedXp = "number", stats = "numberMap",
     },
-    quests = { active = "quest[]", completed = "number[]" },
+    quests = { active = "quest[]", completed = "number[]", completedDetails = "completedQuest[]" },
+    completedQuest = { questId = "number", title = "string" },
     quest = {
         questId = "number", title = "string", level = "number", suggestedGroup = "number",
         frequency = "number", isComplete = "boolean", isFailed = "boolean",
@@ -42,10 +43,12 @@ ns.Schema.prototype = {
         nodeId = "number", activeEntryId = "number", activeRank = "number", currentRank = "number",
         ranksPurchased = "number", maxRanks = "number", isAvailable = "boolean", isVisible = "boolean",
         posX = "number", posY = "number", entries = "entry[]",
+        groupIds = "number[]", visibleEdges = "edge[]",
     },
+    edge = { targetNodeId = "number", edgeType = "number", visualStyle = "number", isActive = "boolean" },
     entry = {
         entryId = "number", definitionId = "number", spellId = "number", name = "string",
-        rank = "number", maxRanks = "number", isActive = "boolean",
+        rank = "number", maxRanks = "number", isActive = "boolean", iconFileId = "number",
     },
     currency = { currencyId = "number", quantity = "number", maxQuantity = "number", spent = "number" },
     group = { groupId = "number", name = "string", iconFileId = "number", currencies = "currency[]" },
@@ -63,7 +66,7 @@ ns.Schema.prototype = {
         durability = "number", maxDurability = "number", stats = "numberMap",
     },
     inventoryItem = { locked = "boolean", bound = "boolean" },
-    equippedItem = { slotName = "string", empty = "boolean" },
+    equippedItem = { slotName = "string", slotIconFileId = "number", empty = "boolean" },
 }
 for _, itemType in ipairs({ "inventoryItem", "equippedItem" }) do
     for name, fieldType in pairs(ns.Schema.prototype.item) do
@@ -118,7 +121,7 @@ end
 
 function ns.Schema.EmptyData(sectionName)
     if sectionName == "quests" then
-        return { active = {}, completed = {} }
+        return { active = {}, completed = {}, completedDetails = {} }
     elseif sectionName == "talents" then
         return { mode = "traits", trees = {} }
     elseif sectionName == "inventory" then

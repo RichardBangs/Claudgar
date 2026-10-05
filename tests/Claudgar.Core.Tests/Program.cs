@@ -8,6 +8,8 @@ var tests = new (string Name, Action Run)[]
     ("Literal parsing and UTF-8 escapes", ParserLiterals),
     ("Executable Lua and resource limits are rejected", ParserRejectsCode),
     ("All sections share a validated data contract", ValidateFixture),
+    ("Saved quest names and talent layout remain compatible with older exports", PresentationMetadata),
+    ("Equipment artwork and character stats are optional validated metadata", EquipmentMetadata),
     ("Wrong clients, versions, coverage and field types are rejected", InvalidSchemas),
     ("Characters remain isolated across accounts and installations", CharacterIsolation),
     ("Every query rereads files and corrupt or missing files retain labeled cache", RefreshAndCache),
@@ -111,6 +113,55 @@ static void InvalidSchemas()
     Invalid(document => document["characters"]!["Player-1-00001234"]!["sections"]!["talents"]!["error"] = new JsonObject());
     Invalid(document => document["characters"]!["Player-1-00001234"]!["sections"]!["quests"]!["data"]!["active"] = new JsonObject { ["2"] = new JsonObject { ["questId"] = 123 } });
     Invalid(document => document["characters"]!["Player-1-00001234"]!["sections"]!["character"]!["data"]!["localAccountPath"] = "private");
+}
+static void PresentationMetadata()
+{
+    var document = ParsedFixture();
+    document["ui"] = new JsonObject { ["minimapAngle"] = 225 };
+    var data = document["characters"]!["Player-1-00001234"]!["sections"]!;
+    data["quests"]!["data"]!["completedDetails"] = new JsonArray(new JsonObject { ["questId"] = 7, ["title"] = "A saved quest title" });
+    var node = data["talents"]!["data"]!["trees"]![0]!["nodes"]![0]!;
+    node["groupIds"] = new JsonArray(1, 2);
+    node["visibleEdges"] = new JsonArray(new JsonObject { ["targetNodeId"] = 2000, ["edgeType"] = 1, ["visualStyle"] = 0, ["isActive"] = true });
+    node["entries"]![0]!["iconFileId"] = 1234;
+    var validated = new SnapshotValidator().Validate(document).Characters.Values.Single()["sections"]!;
+    Assert(!validated.ToJsonString().Contains("minimapAngle"), "Local addon display preferences leaked into public sections.");
+    Assert(validated["quests"]!["data"]!["completed"]!.AsArray().Count == 3, "Saved names changed completed IDs.");
+    Assert(validated["quests"]!["data"]!["completedDetails"]![0]!["title"]!.GetValue<string>() == "A saved quest title", "Saved quest name was lost.");
+    Assert(validated["talents"]!["data"]!["trees"]![0]!["nodes"]![0]!["groupIds"] is JsonArray { Count: 2 }, "Numeric group IDs were lost.");
+    Assert(validated["talents"]!["data"]!["trees"]![0]!["nodes"]![0]!["visibleEdges"]![0]!["edgeType"]!.GetValue<int>() == 1, "Talent edges were lost.");
+    node["groupIds"] = new JsonObject();
+    node["visibleEdges"] = new JsonObject();
+    data["quests"]!["data"]!["completedDetails"] = new JsonObject();
+    validated = new SnapshotValidator().Validate(document).Characters.Values.Single()["sections"]!;
+    Assert(validated["quests"]!["data"]!["completedDetails"] is JsonArray { Count: 0 }, "Empty saved title table was not normalized.");
+    node["groupIds"] = new JsonArray("private-path");
+    Reject(() => new SnapshotValidator().Validate(document));
+    node["groupIds"] = new JsonArray(1);
+    data["quests"]!["data"]!["completedDetails"] = new JsonArray(new JsonObject { ["questId"] = 9999, ["title"] = "Not completed" });
+    Reject(() => new SnapshotValidator().Validate(document));
+    data["quests"]!["data"]!["completedDetails"]![0]!["questId"] = 7;
+    data["quests"]!["data"]!["completedDetails"]![0]!["title"] = 123;
+    Reject(() => new SnapshotValidator().Validate(document));
+    _ = new SnapshotValidator().Validate(ParsedFixture());
+}
+static void EquipmentMetadata()
+{
+    var document = ParsedFixture();
+    var sections = document["characters"]!["Player-1-00001234"]!["sections"]!;
+    sections["character"]!["data"]!["stats"] = new JsonObject { ["strength"] = 23, ["maxHealth"] = 392, ["meleeCritChance"] = 6.24 };
+    sections["equipment"]!["data"]!["items"]![0]!["slotIconFileId"] = 136516;
+    var validated = new SnapshotValidator().Validate(document).Characters.Values.Single()["sections"]!;
+    Assert(validated["character"]!["data"]!["stats"]!["meleeCritChance"]!.GetValue<double>() == 6.24,
+        "Character stat maps must retain fractional native values.");
+    Assert(validated["equipment"]!["data"]!["items"]![0]!["slotIconFileId"]!.GetValue<int>() == 136516,
+        "The exported empty-slot artwork ID must remain available.");
+    sections["character"]!["data"]!["stats"]!["strength"] = "private-path";
+    Reject(() => new SnapshotValidator().Validate(document));
+    sections["character"]!["data"]!["stats"]!["strength"] = 23;
+    sections["equipment"]!["data"]!["items"]![0]!["slotIconFileId"] = "136516";
+    Reject(() => new SnapshotValidator().Validate(document));
+    _ = new SnapshotValidator().Validate(ParsedFixture());
 }
 static string ExportPath(string installation, string account) => Path.Combine(installation, "WTF", "Account", account, "SavedVariables", ExportContract.ExportFileName);
 static void WriteExport(string path, string? contents = null)
