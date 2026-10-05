@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Claudgar.Core/Claudgar.Core.csproj" />
+    <Project Path="src/Claudgar.App/Claudgar.App.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Claudgar.Core.Tests/Claudgar.Core.Tests.csproj" />
+  </Folder>
+</Solution>

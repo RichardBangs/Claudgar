@@ -1,0 +1,22 @@
+## Interface: 16001
+## Title: Claudgar
+## Notes: Character context exports for the WoW Forever Beta companion.
+## Author: Claudgar
+## Version: 0.1.0
+## SavedVariables: ClaudgarDB
+## AllowLoadGameType: camelot
+## X-Game: [Game]
+## X-Family: [Family]
+
+Schema.lua
+Api.lua
+Client.lua
+Collectors\Character.lua
+Collectors\Quests.lua
+Collectors\Talents.lua
+Collectors\ItemDetails.lua
+Collectors\Inventory.lua
+Collectors\Equipment.lua
+Snapshot.lua
+Events.lua
+Commands.lua

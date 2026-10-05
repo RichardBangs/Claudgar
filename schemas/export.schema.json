@@ -1,0 +1,1020 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claudgar.local/schemas/export-v1.json",
+  "title": "Claudgar Forever export v1",
+  "description": "Normalized JSON representation of the shared Lua SavedVariables contract. Lua list fields use 1-based table entries; known empty list tables normalize to JSON arrays.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "client": {
+      "type": "object",
+      "properties": {
+        "flavor": {
+          "const": "forever"
+        },
+        "version": {
+          "type": "string"
+        },
+        "build": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "interface": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "locale": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "flavor"
+      ],
+      "additionalProperties": false
+    },
+    "characters": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/characterRecord"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "client",
+    "characters"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "itemDetails": {
+      "type": "object",
+      "properties": {
+        "itemId": {
+          "type": "number"
+        },
+        "slot": {
+          "type": "number"
+        },
+        "count": {
+          "type": "number"
+        },
+        "quality": {
+          "type": "number"
+        },
+        "itemLevel": {
+          "type": "number"
+        },
+        "requiredLevel": {
+          "type": "number"
+        },
+        "classId": {
+          "type": "number"
+        },
+        "subclassId": {
+          "type": "number"
+        },
+        "iconFileId": {
+          "type": "number"
+        },
+        "maxStackCount": {
+          "type": "number"
+        },
+        "sellPrice": {
+          "type": "number"
+        },
+        "durability": {
+          "type": "number"
+        },
+        "maxDurability": {
+          "type": "number"
+        },
+        "link": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "className": {
+          "type": "string"
+        },
+        "subclassName": {
+          "type": "string"
+        },
+        "equipLocation": {
+          "type": "string"
+        },
+        "slotName": {
+          "type": "string"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "bound": {
+          "type": "boolean"
+        },
+        "isCraftingReagent": {
+          "type": "boolean"
+        },
+        "empty": {
+          "type": "boolean"
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "character": {
+      "type": "object",
+      "properties": {
+        "guid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "realm": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "className": {
+          "type": "string"
+        },
+        "classToken": {
+          "type": "string"
+        },
+        "raceName": {
+          "type": "string"
+        },
+        "raceToken": {
+          "type": "string"
+        },
+        "faction": {
+          "type": "string"
+        },
+        "locale": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string"
+        },
+        "subZone": {
+          "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "classId": {
+          "type": "number"
+        },
+        "raceId": {
+          "type": "number"
+        },
+        "mapId": {
+          "type": "number"
+        },
+        "money": {
+          "type": "number"
+        },
+        "xp": {
+          "type": "number"
+        },
+        "maxXp": {
+          "type": "number"
+        },
+        "restedXp": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "realm"
+      ],
+      "additionalProperties": false
+    },
+    "objective": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "objectiveType": {
+          "type": "number"
+        },
+        "finished": {
+          "type": "boolean"
+        },
+        "numFulfilled": {
+          "type": "number"
+        },
+        "numRequired": {
+          "type": "number"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "quest": {
+      "type": "object",
+      "properties": {
+        "questId": {
+          "type": "number"
+        },
+        "level": {
+          "type": "number"
+        },
+        "suggestedGroup": {
+          "type": "number"
+        },
+        "frequency": {
+          "type": "number"
+        },
+        "requiredMoney": {
+          "type": "number"
+        },
+        "title": {
+          "type": "string"
+        },
+        "isComplete": {
+          "type": "boolean"
+        },
+        "isFailed": {
+          "type": "boolean"
+        },
+        "isTask": {
+          "type": "boolean"
+        },
+        "isHidden": {
+          "type": "boolean"
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/objective"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "quests": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/quest"
+          }
+        },
+        "completed": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "talentEntry": {
+      "type": "object",
+      "properties": {
+        "entryId": {
+          "type": "number"
+        },
+        "definitionId": {
+          "type": "number"
+        },
+        "spellId": {
+          "type": "number"
+        },
+        "rank": {
+          "type": "number"
+        },
+        "maxRanks": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "talentNode": {
+      "type": "object",
+      "properties": {
+        "nodeId": {
+          "type": "number"
+        },
+        "activeEntryId": {
+          "type": "number"
+        },
+        "activeRank": {
+          "type": "number"
+        },
+        "currentRank": {
+          "type": "number"
+        },
+        "ranksPurchased": {
+          "type": "number"
+        },
+        "maxRanks": {
+          "type": "number"
+        },
+        "posX": {
+          "type": "number"
+        },
+        "posY": {
+          "type": "number"
+        },
+        "isAvailable": {
+          "type": "boolean"
+        },
+        "isVisible": {
+          "type": "boolean"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/talentEntry"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "currency": {
+      "type": "object",
+      "properties": {
+        "currencyId": {
+          "type": "number"
+        },
+        "quantity": {
+          "type": "number"
+        },
+        "maxQuantity": {
+          "type": "number"
+        },
+        "spent": {
+          "type": "number"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "talentGroup": {
+      "type": "object",
+      "properties": {
+        "groupId": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "iconFileId": {
+          "type": "number"
+        },
+        "currencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/currency"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "talentTree": {
+      "type": "object",
+      "properties": {
+        "treeId": {
+          "type": "number"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/talentNode"
+          }
+        },
+        "currencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/currency"
+          }
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/talentGroup"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "talents": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "const": "traits"
+        },
+        "activeConfigId": {
+          "type": "number"
+        },
+        "activeSpecGroup": {
+          "type": "number"
+        },
+        "configName": {
+          "type": "string"
+        },
+        "hasStagedChanges": {
+          "type": "boolean"
+        },
+        "trees": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/talentTree"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "bag": {
+      "type": "object",
+      "properties": {
+        "bagId": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "slotCount": {
+          "type": "number"
+        },
+        "freeSlots": {
+          "type": "number"
+        },
+        "bagFamily": {
+          "type": "number"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/itemDetails"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "inventory": {
+      "type": "object",
+      "properties": {
+        "bags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/bag"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "equipment": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/itemDetails"
+          }
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "characterSection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/character"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "observedAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/character"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "required": [
+                  "guid", "name", "realm", "className", "classToken", "raceName", "raceToken",
+                  "faction", "locale", "zone", "level", "classId", "raceId"
+                ],
+                "properties": {
+                  "classId": { "type": "integer", "minimum": 1 },
+                  "raceId": { "type": "integer", "minimum": 1 }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "questsSection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/quests"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "observedAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/quests"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "required": [
+                  "active",
+                  "completed"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "talentsSection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/talents"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "observedAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/talents"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "required": [
+                  "trees"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "inventorySection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/inventory"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "observedAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/inventory"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "required": [
+                  "bags"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "equipmentSection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "unavailable",
+            "failed"
+          ]
+        },
+        "observedAt": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 253402300799
+        },
+        "data": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/equipment"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "observedAt"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "complete",
+                  "partial"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/equipment"
+              }
+            },
+            "required": [
+              "data"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "required": [
+                  "items"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "characterRecord": {
+      "type": "object",
+      "properties": {
+        "characterKey": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "sections": {
+          "type": "object",
+          "properties": {
+            "character": {
+              "$ref": "#/$defs/characterSection"
+            },
+            "quests": {
+              "$ref": "#/$defs/questsSection"
+            },
+            "talents": {
+              "$ref": "#/$defs/talentsSection"
+            },
+            "inventory": {
+              "$ref": "#/$defs/inventorySection"
+            },
+            "equipment": {
+              "$ref": "#/$defs/equipmentSection"
+            }
+          },
+          "required": [
+            "character",
+            "quests",
+            "talents",
+            "inventory",
+            "equipment"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "characterKey",
+        "sections"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
