@@ -10,7 +10,7 @@ A WoW Forever addon and Windows app that exports your character, quests, talents
 
 ## Ask ChatGPT
 
-Select your character and a section with a JSON browser in Claudgar, click **Copy JSON**, and paste it into ChatGPT with your question: “Which of these items should I equip?” For inventory, open **JSON tree** first. Talents show the full tree directly, with automatic sizing and details on hover; local Codex can query the saved talent data.
+Select your character and a section with a JSON browser in Claudgar, click **Copy JSON**, and paste it into ChatGPT with your question.
 
 For automatic queries, use [ChatGPT Desktop app](https://learn.chatgpt.com/docs/quickstart). Claudgar sets up the connection; keep Claudgar running and restart ChatGPT Desktop App after setup. Ask: “Use Claudgar to check my character’s gear.”
 
