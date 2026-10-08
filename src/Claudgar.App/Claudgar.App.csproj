@@ -4,8 +4,8 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>Claudgar</AssemblyName>
-    <Version>0.1.0</Version>
-    <Description>Browse saved WoW Forever Beta character data and share it with local Codex.</Description>
+    <Product>Claudgar</Product>
+    <Description>Browse saved WoW Forever Beta character data and share it with ChatGPT, Claude Desktop, or Claude Code.</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
@@ -13,15 +13,28 @@
     <PublishTrimmed>false</PublishTrimmed>
     <DebugType>embedded</DebugType>
     <ApplicationIcon>Resources/Artwork/claudgar.ico</ApplicationIcon>
+    <ClaudgarBridgePath Condition="'$(ClaudgarBridgePath)' == ''">$(MSBuildProjectDirectory)/../../.tmp/claude-bridge/Claudgar.McpBridge.exe</ClaudgarBridgePath>
+    <ClaudgarAddonPath Condition="'$(ClaudgarAddonPath)' == ''">$(MSBuildProjectDirectory)/../../addon/Claudgar</ClaudgarAddonPath>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Claudgar.Core/Claudgar.Core.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.2.0" />
-    <EmbeddedResource Include="../../addon/Claudgar/**/*" LogicalName="Addon/%(RecursiveDir)%(Filename)%(Extension)" />
-    <EmbeddedResource Include="../../skill/claudgar/SKILL.md" LogicalName="Skill/SKILL.md" />
+    <EmbeddedResource Include="$(ClaudgarAddonPath)/**/*" LogicalName="Addon/%(RecursiveDir)%(Filename)%(Extension)" />
     <EmbeddedResource Include="Resources/Artwork/*.png" LogicalName="Artwork/%(Filename)%(Extension)" />
     <EmbeddedResource Include="Resources/Artwork/claudgar.ico" LogicalName="Artwork/claudgar.ico" />
+    <EmbeddedResource Include="../../LICENSE" LogicalName="License/MIT.txt" />
+    <EmbeddedResource Include="$(ClaudgarBridgePath)" LogicalName="Bridge/Claudgar.McpBridge.exe" Condition="Exists('$(ClaudgarBridgePath)')" />
     <InternalsVisibleTo Include="Claudgar.App.Tests" />
   </ItemGroup>
+  <Target Name="GenerateClaudgarManifest" BeforeTargets="_SetEmbeddedWin32ManifestProperties">
+    <PropertyGroup>
+      <_ClaudgarManifest>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)/app.manifest').Replace('__APP_VERSION__', '$(AssemblyVersion)'))</_ClaudgarManifest>
+      <ApplicationManifest>$(IntermediateOutputPath)Claudgar.manifest</ApplicationManifest>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(ApplicationManifest)" Lines="$(_ClaudgarManifest)" Overwrite="true" Encoding="utf-8" WriteOnlyWhenDifferent="true" />
+  </Target>
+  <Target Name="RequireBundledBridge" BeforeTargets="Publish" Condition="!Exists('$(ClaudgarBridgePath)')">
+    <Error Text="Publish with build.ps1 to bundle the Claude connection helper." />
+  </Target>
 </Project>

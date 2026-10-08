@@ -616,6 +616,7 @@ Test("a left drag started in combat cannot reload when released after combat", f
 end)
 
 dofile(TEST_ROOT .. "/CharacterStatsTests.lua")(MockGame, Test, Equal, LiveSections)
+dofile(TEST_ROOT .. "/MinimapPortraitTests.lua")(MockGame, Test, Equal)
 
 print(string.format("Addon regression tests: %d passed, %d failed", passed, failed))
 assert(failed == 0, "Addon regression suite failed")

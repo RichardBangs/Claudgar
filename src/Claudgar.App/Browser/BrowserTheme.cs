@@ -6,9 +6,9 @@ internal static class BrowserTheme
     public static readonly Color Surface = Color.FromArgb(24, 33, 42);
     public static readonly Color Raised = Color.FromArgb(32, 44, 54);
     public static readonly Color Border = Color.FromArgb(52, 65, 74);
-    public static readonly Color Ink = Color.FromArgb(238, 229, 209);
+    public static readonly Color Ink = Color.FromArgb(239, 240, 242);
     public static readonly Color Muted = Color.FromArgb(165, 177, 184);
-    public static readonly Color Accent = Color.FromArgb(203, 166, 101);
+    public static readonly Color Accent = Color.FromArgb(237, 188, 106);
     public static readonly Color Warning = Color.FromArgb(229, 183, 109);
     public static readonly Color Success = Color.FromArgb(130, 191, 162);
 

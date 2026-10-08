@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Claudgar.Core.Setup;
 
@@ -8,11 +9,13 @@ public sealed class OwnedFilesInstaller
     private const string ManifestName = ".claudgar-owned-files.json";
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
-    public InstallationResult Install(string directory, IReadOnlyDictionary<string, byte[]> files)
+    public InstallationResult Install(string directory, IReadOnlyDictionary<string, byte[]> files,
+        string? successfulAppVersion = null, bool skipIfVersionCurrent = false)
     {
         bool changed = false;
         try
         {
+            if (successfulAppVersion is not null) ArgumentException.ThrowIfNullOrWhiteSpace(successfulAppVersion);
             directory = Path.GetFullPath(directory);
             SafeFiles.RejectReparsePoints(directory);
             var manifestPath = Path.Combine(directory, ManifestName);
@@ -29,6 +32,12 @@ public sealed class OwnedFilesInstaller
             {
                 return new(false, false, "An existing folder is not owned by Claudgar. Its files were preserved; rename it before setting up again.", directory);
             }
+
+            // The marker belongs to this installation and only advances with a completed install.
+            // Health inspection and explicit repair still check the actual files at the same version.
+            if (skipIfVersionCurrent && successfulAppVersion is not null &&
+                owned.SuccessfulAppVersion == successfulAppVersion && owned.PendingFiles.Count == 0)
+                return new(true, false, "The addon is already installed for Claudgar " + successfulAppVersion + ".", directory);
 
             var targets = new List<(string Relative, string Path, byte[] Content, string Hash, string? PreviousHash)>();
             var uniquePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -74,6 +83,7 @@ public sealed class OwnedFilesInstaller
                 owned.Files[target.Relative] = target.Hash;
                 owned.PendingFiles.Remove(target.Relative);
             }
+            if (successfulAppVersion is not null) owned.SuccessfulAppVersion = successfulAppVersion;
             var manifestContent = JsonSerializer.SerializeToUtf8Bytes(owned, JsonOptions);
             if (!File.Exists(manifestPath) || !SafeFiles.ReadLimited(manifestPath, 1024 * 1024).AsSpan().SequenceEqual(manifestContent))
             {
@@ -95,5 +105,8 @@ public sealed class OwnedFilesInstaller
         public int SchemaVersion { get; init; } = 1;
         public Dictionary<string, string> Files { get; init; } = new(StringComparer.OrdinalIgnoreCase);
         public Dictionary<string, string> PendingFiles { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+        [JsonPropertyName("successfulAppVersion")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public string? SuccessfulAppVersion { get; set; }
     }
 }

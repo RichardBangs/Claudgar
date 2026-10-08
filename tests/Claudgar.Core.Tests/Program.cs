@@ -2,7 +2,7 @@ using System.Text.Json.Nodes;
 using Claudgar.Core.Data;
 using Claudgar.Core.Exports;
 
-// Package-free regression suite. Intentionally not run before the user's first test.
+// Package-free regression suite using synthetic exports and isolated setup targets.
 var tests = new (string Name, Action Run)[]
 {
     ("Literal parsing and UTF-8 escapes", ParserLiterals),
@@ -27,6 +27,28 @@ var tests = new (string Name, Action Run)[]
     ("Malformed settings and unrelated settings are preserved", SetupRegressionTests.MalformedSettingsArePreserved),
     ("Forever beta validation discriminates the shared beta slot", SetupRegressionTests.ForeverValidationDiscriminatesSharedBetaSlot),
     ("Game discovery resolves root and beta paths and suggests the existing folder", SetupRegressionTests.GameDiscoveryFindsRootOrBetaDirectory),
+    ("Startup defaults and choices persist; registration preserves other values", StartupAndAddonVersionTests.StartupDefaultPersistenceAndRegistration),
+    ("Startup failures preserve effective state", StartupAndAddonVersionTests.StartupFailurePreservesEffectiveState),
+    ("Addon versions migrate, upgrade, and roll back per installation", StartupAndAddonVersionTests.AddonVersionsInstallMigrateUpgradeAndRollback),
+    ("Failed addon versions retry and pending updates resume", StartupAndAddonVersionTests.AddonFailuresRetryAndPendingSameVersionResumes),
+    ("Claude setup preserves unrelated settings and is repeatable", ClaudeSetupRegressionTests.ClaudeConfigurationPreservesSettings),
+    ("Malformed or conflicting Claude configuration is preserved", ClaudeSetupRegressionTests.ClaudeMalformedAndConflictingConfigurationIsPreserved),
+    ("Native helper installs and defers locked replacements", ClaudeSetupRegressionTests.NativeBridgeInstallationAndLockedUpdate),
+    ("Interrupted Claude configuration and helper updates resume", ClaudeSetupRegressionTests.ClaudeInterruptedSetupResumes),
+    ("Claude Desktop classic and Microsoft Store configurations are detected and registered", ClaudeSetupRegressionTests.ClaudeStoreAndClassicConfigurationsAreDetected),
+    ("Claude Code setup preserves unrelated settings and is repeatable", ClaudeCodeSetupRegressionTests.ClaudeCodeConfigurationPreservesSettings),
+    ("Malformed or conflicting Claude Code configuration is preserved", ClaudeCodeSetupRegressionTests.ClaudeCodeMalformedAndConflictingConfigurationIsPreserved),
+    ("Large Claude Code configuration files are supported", ClaudeCodeSetupRegressionTests.ClaudeCodeLargeConfigurationIsSupported),
+    ("Claude Code setup skips when absent and installs the shared skill", ClaudeCodeSetupRegressionTests.ClaudeCodeSetupSkipsWhenAbsentAndInstallsSkill),
+    ("MCP instructions come from the client-neutral skill", ClaudeCodeSetupRegressionTests.SharedGuidanceComesFromTheSkill),
+    ("Updater selects stable releases with verified metadata", UpdaterRegressionTests.VersionsAndReleaseSelection),
+    ("Updater handles missing, offline, older, and rate-limited releases", UpdaterRegressionTests.AbsentOfflineAndOlderReleases),
+    ("Updater rejects corrupt, interrupted, and wrong executable downloads", UpdaterRegressionTests.CorruptInterruptedAndWrongDownloads),
+    ("Pending updates are validated again before installation", UpdaterRegressionTests.ReadyUpdatesAreRevalidated),
+    ("Updater waits for exit and retains startup mode", UpdaterRegressionTests.SuccessfulApplyWaitsAndPreservesStartup),
+    ("Failed updated startup restores and quarantines the candidate", UpdaterRegressionTests.FailedLaunchRollsBackAndQuarantines),
+    ("Interrupted executable replacement recovers", UpdaterRegressionTests.InterruptedReplacementRecovers),
+    ("Locked targets and malformed update journals recover safely", UpdaterRegressionTests.LockedAndMalformedJournalsRecoverSafely),
 };
 var failed = 0;
 foreach (var test in tests)

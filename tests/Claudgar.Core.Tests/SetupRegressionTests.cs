@@ -205,7 +205,8 @@ internal static class SetupRegressionTests
 
     public static void InTemporaryFolder(Action<string> test)
     {
-        var tempRoot = Path.GetFullPath(Path.GetTempPath()).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var tempRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".tmp", "core-tests"))
+            .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         var name = "Claudgar.Setup.Tests." + Guid.NewGuid().ToString("N");
         var createdFolder = Path.GetFullPath(Path.Combine(tempRoot, name));
         Directory.CreateDirectory(createdFolder);

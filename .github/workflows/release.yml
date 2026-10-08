@@ -1,0 +1,88 @@
+name: Verify and prepare release
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check tag version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        run: |
+          [xml]$version = Get-Content Version.props -Raw
+          if ($env:GITHUB_REF_NAME -cne "v$($version.Project.PropertyGroup.Version)") {
+            throw 'Release tag and Version.props disagree.'
+          }
+      - name: Install addon test dependency
+        run: python -m pip install lupa
+      - name: Run saved-data and setup regressions
+        run: dotnet run --project tests/Claudgar.Core.Tests -c Release
+      - name: Run presentation regressions
+        run: dotnet run --project tests/Claudgar.App.Tests -c Release
+      - name: Run simulated addon regressions
+        run: python tests/addon/run.py
+      - name: Check compact and enlarged window layouts
+        shell: pwsh
+        run: |
+          dotnet run --project tools/Claudgar.Preview -c Release -- .tmp/release-preview.png --width 1120 --height 750
+          if ($LASTEXITCODE -ne 0) { throw 'Compact preview failed.' }
+          dotnet run --project tools/Claudgar.Preview -c Release --no-build -- .tmp/release-no-game.png --width 1120 --height 750 --no-game
+          if ($LASTEXITCODE -ne 0) { throw 'First-run preview failed.' }
+          dotnet run --project tools/Claudgar.Preview -c Release --no-build -- .tmp/release-preview-2x.png --width 1120 --height 750 --scale 2
+          if ($LASTEXITCODE -ne 0) { throw 'Enlarged preview failed.' }
+      - name: Run isolated Windows update process regressions
+        shell: pwsh
+        run: ./tests/updater-process-tests.ps1
+      - name: Publish portable app
+        shell: pwsh
+        run: ./build.ps1
+      - name: Verify packaged app contents
+        run: dotnet run --project tests/Claudgar.App.Tests -c Release -- --package "${{ github.workspace }}/dist/win-x64/Claudgar.exe"
+      - name: Run native connector regressions
+        run: dotnet run --project tests/Claudgar.McpBridge.Tests -c Release -- --bridge "${{ github.workspace }}/.tmp/claude-bridge/Claudgar.McpBridge.exe"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Claudgar-win-x64
+          path: |
+            dist/win-x64/Claudgar.exe
+            dist/win-x64/Claudgar.exe.sha256
+            dist/win-x64/LICENSE
+  draft-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: windows
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: Claudgar-win-x64
+          path: release
+      - name: Prepare draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true || { echo 'Published releases are preserved.'; exit 1; }
+          else
+            gh release create "$RELEASE_TAG" --draft --title "Claudgar $RELEASE_TAG" --generate-notes
+          fi
+          gh release upload "$RELEASE_TAG" release/Claudgar.exe release/Claudgar.exe.sha256 release/LICENSE --clobber

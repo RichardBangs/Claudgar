@@ -16,4 +16,6 @@ Make sure to split code up such that a class or file has a single responsibility
 
 # Rules
 
+Use `build.ps1` to publish the Windows app. The one permanent app build folder is `C:\repos\Claudgar\dist\win-x64`, with the executable at `dist\win-x64\Claudgar.exe`. Always update that folder in place; do not create build folders named after features, versions, dates, or experiments. Keep temporary build checks under `.tmp` and keep normal compiler `bin`/`obj` caches separate from the runnable app build.
+
 Please do NOT launch World of Warcraft, or interact with it, as this might break ToS with Blizzard. Also be careful to keep any LUA code within the ToS too. I do not want my account banned!!

@@ -43,6 +43,9 @@ internal static class Program
                 new[] { new GameInstallation(@"C:\Preview\World of Warcraft\_classic_beta_", @"C:\Preview\World of Warcraft", "1.60.1.69913") });
         Console.WriteLine("Preparing isolated controls.");
         using var form = (Form)Activator.CreateInstance(formType, coordinator)!;
+        // Show the control's normal appearance without running setup or changing registration.
+        var releaseControls = (Control)Field(form, "releaseControls");
+        ((CheckBox)releaseControls.GetType().GetProperty("StartupCheckBox")!.GetValue(releaseControls)!).Enabled = true;
         var tray = (NotifyIcon)Field(form, "tray");
         var timer = (System.Windows.Forms.Timer)Field(form, "refreshTimer");
         tray.Visible = false;
@@ -83,14 +86,20 @@ internal static class Program
             host.Show();
             LayoutTree(host);
             Application.DoEvents();
-            Console.WriteLine("Verifying data interactions and layout.");
+            Console.WriteLine("Verifying assistant home, data interactions, and layout.");
+            VerifyMinimalShell(host, form, releaseControls);
             if (noGame) VerifyGameFolderPrompt(form);
-            else Verify(form);
+            else Verify(form, host);
             if (!noGame)
             {
-                var tabs = Field(form, "tabs");
-                var sectionIndex = Array.IndexOf(new[] { "character", "quests", "talents", "inventory", "equipment" }, section);
-                tabs.GetType().GetProperty("SelectedIndex")!.SetValue(tabs, sectionIndex);
+                if (section == "home") Invoke(form, "ShowAssistantHome");
+                else
+                {
+                    Invoke(form, "ShowDataView");
+                    var tabs = Field(form, "tabs");
+                    var sectionIndex = Array.IndexOf(new[] { "character", "quests", "talents", "inventory", "equipment" }, section);
+                    tabs.GetType().GetProperty("SelectedIndex")!.SetValue(tabs, sectionIndex);
+                }
                 LayoutTree(host);
                 Application.DoEvents();
             }
@@ -105,7 +114,7 @@ internal static class Program
             host.Hide();
             Console.WriteLine($"PASS Preview render: {absolutePath} ({bitmap.Width}x{bitmap.Height}); layout scale {scale:0.##}x; device DPI {form.DeviceDpi}.");
             Console.WriteLine(noGame ? "PASS Single game-folder prompt and hidden browser actions."
-                : "PASS Synthetic data navigation, collection search, and main control bounds.");
+                : "PASS Assistant home, hidden data navigation, collection search, and main control bounds.");
             Console.WriteLine("Only a plain offscreen preview host was shown. MainForm startup and the local MCP service were never run.");
         }
         finally
@@ -146,7 +155,12 @@ internal static class Program
         var setCharacter = heading.GetType().GetMethod("SetCharacter");
         if (setCharacter is not null) setCharacter.Invoke(heading, [snapshot]);
         else heading.Text = "Aeloria  ·  Classic Beta PvE\nLevel 22 Human Priest";
-        ((Control)Field(form, "connection")).Text = "Local service ready";
+        var assistantHome = Field(form, "assistantHome");
+        assistantHome.GetType().GetMethod("SetCharacter")!.Invoke(assistantHome, [snapshot]);
+        var connection = (Control)Field(form, "connection");
+        connection.Text = "●  Ready";
+        var theme = form.GetType().Assembly.GetType("Claudgar.App.Browser.BrowserTheme")!;
+        connection.ForeColor = (Color)theme.GetField("Success", BindingFlags.Public | BindingFlags.Static)!.GetValue(null)!;
         ((Control)Field(form, "exportStatus")).Text = "1 saved character · Updates automatically · Export: ready";
         ((Control)Field(form, "setupDetails")).Text = "SETUP & CONNECTION\n\nPreview with fictional character data.\n\nAll five saved sections are ready to browse.";
         foreach (DictionaryEntry entry in (IDictionary)Field(form, "browsers"))
@@ -162,9 +176,13 @@ internal static class Program
         }
     }
 
-    private static void Verify(Form form)
+    private static void Verify(Form form, Control host)
     {
         VerifyStreamlinedActions(form);
+        VerifyAssistantHome(form, host);
+        Invoke(form, "ShowDataView");
+        LayoutTree(host);
+        Application.DoEvents();
         foreach (var name in new[] { "characters", "characterHeading", "tabs", "exportStatus" })
         {
             var control = (Control)Field(form, name);
@@ -195,6 +213,72 @@ internal static class Program
         Assert(questGrid.RowCount == 1, "Saved completed quest titles are not searchable.");
         ((TextBox)Field(quests, "search")).Clear();
         VerifyCustomViews(form, browsers);
+        VerifyDataNavigation(form, host);
+    }
+
+    private static void VerifyAssistantHome(Form form, Control host)
+    {
+        var home = (Control)Field(form, "assistantHome");
+        var tabs = (Control)Field(form, "tabs");
+        Assert(home.Visible && !tabs.Visible, "The assistant home must be the default; data tabs must stay hidden.");
+        Assert(!((Control)Field(form, "exportStatus")).Visible, "The home still shows the detailed export footer.");
+        var suggestions = new[]
+        {
+            "Which areas should I quest next?",
+            "What quests do I need for Deadmines?",
+            "How can I improve my gear?"
+        };
+        var buttons = Descendants(home).OfType<Button>().ToArray();
+        var actualSuggestions = ((IEnumerable)Property(home, "SuggestionButtons")).Cast<Button>().Select(button => button.Text).ToArray();
+        Assert(actualSuggestions.SequenceEqual(suggestions),
+            "The home does not show exactly the three requested questions.");
+        Assert(buttons.Any(button => button.Text.Contains("ChatGPT")) && buttons.Any(button => button.Text.Contains("Claude")),
+            "Both assistant launch choices must be reachable from home.");
+        foreach (var button in buttons.Where(button => button.Visible))
+        {
+            Assert(button.Height >= 32 && button.Width >= 100, $"Home action is too small: {button.Text}, {button.Bounds}.");
+            Assert(button.Parent!.ClientRectangle.Contains(button.Bounds), $"Home action is clipped: {button.Text}, {button.Bounds}.");
+        }
+        Assert(home.Width > 500 && home.Height > 280 && home.Parent!.ClientRectangle.Contains(home.Bounds),
+            $"The assistant home does not fit its content area: {home.Bounds}.");
+        var banner = (Control)Field(form, "characterHeading");
+        var detailsButton = (Button)banner.GetType().GetProperty("DetailsButton")!.GetValue(banner)!;
+        Assert(detailsButton.Visible && detailsButton.Enabled && banner.ClientRectangle.Contains(detailsButton.Bounds),
+            "Character details must be reachable without exposing the data tabs.");
+        detailsButton.PerformClick();
+        LayoutTree(host);
+        Application.DoEvents();
+        Assert(tabs.Visible && !home.Visible, "The character-details action does not open the data view.");
+        Invoke(form, "ShowAssistantHome");
+        LayoutTree(host);
+        Application.DoEvents();
+        Console.WriteLine("PASS Minimal assistant home, exact question suggestions, and reachable character details.");
+    }
+
+    private static void VerifyDataNavigation(Form form, Control host)
+    {
+        var tabs = Field(form, "tabs");
+        var selectedIndex = tabs.GetType().GetProperty("SelectedIndex")!;
+        var characters = (ListBox)Field(form, "characters");
+        var selectedCharacter = characters.SelectedItem;
+        selectedIndex.SetValue(tabs, 1);
+        var back = (Button)Field(form, "dataBackButton");
+        Assert(back.Visible && back.Enabled && back.Parent!.ClientRectangle.Contains(back.Bounds),
+            "The data view needs an accessible action to return to the assistant home.");
+        back.PerformClick();
+        LayoutTree(host);
+        Application.DoEvents();
+        Assert(((Control)Field(form, "assistantHome")).Visible && !((Control)tabs).Visible,
+            "Returning from details does not restore the assistant home.");
+        Assert(ReferenceEquals(selectedCharacter, characters.SelectedItem) && (int)selectedIndex.GetValue(tabs)! == 1,
+            "Returning home lost the selected character or data section.");
+        Invoke(form, "ShowDataView");
+        LayoutTree(host);
+        Application.DoEvents();
+        Assert(((Control)tabs).Visible && (int)selectedIndex.GetValue(tabs)! == 1 && ReferenceEquals(selectedCharacter, characters.SelectedItem),
+            "Opening details again did not preserve the last selected character and section.");
+        selectedIndex.SetValue(tabs, 0);
+        Console.WriteLine("PASS Home/details navigation preserves selected character and data section.");
     }
 
     private static void VerifyCustomViews(Form form, IDictionary browsers)
@@ -563,7 +647,8 @@ internal static class Program
         var layoutType = canvas.GetType().Assembly.GetType("Claudgar.App.Browser.TalentTreeLayout")!;
         var iconSize = (int)layoutType.GetField("IconSize", BindingFlags.Public | BindingFlags.Static)!.GetRawConstantValue()!;
         var minimumNodePixels = canvas.Height >= 400 ? 30 : 24;
-        Assert(iconSize * originalScale >= minimumNodePixels, "Talent nodes remain too small for the available preview viewport.");
+        Assert(iconSize * originalScale >= minimumNodePixels,
+            $"Talent nodes remain too small for the available preview viewport: {canvas.ClientSize}, node {iconSize * originalScale:0.0}px, required {minimumNodePixels}px.");
 
         var originalSize = canvas.Size;
         canvas.Dock = DockStyle.None;
@@ -604,8 +689,39 @@ internal static class Program
             "The game-folder action is missing or too small.");
         Assert(form.AcceptButton == button, "Enter does not activate the game-folder action.");
         var issueBar = (Control)Field(form, "setupIssueBar");
-        Assert(((TableLayoutPanel)issueBar.Parent!).GetRowHeights()[1] == 0,
+        var shell = (TableLayoutPanel)issueBar.Parent!;
+        Assert(shell.GetRowHeights()[shell.GetRow(issueBar)] == 0,
             "Issue actions occupy space before a game folder is selected.");
+    }
+
+    private static void VerifyMinimalShell(Control host, Form form, Control releaseControls)
+    {
+        Assert(!Descendants(host).Any(control => control.GetType().Name == "AppGuidance" && control.Visible),
+            "The old question-guidance banner still occupies the primary interface.");
+        var startup = (CheckBox)releaseControls.GetType().GetProperty("StartupCheckBox")!.GetValue(releaseControls)!;
+        Assert(!startup.Visible, "Startup preferences must be tucked into settings on the default screen.");
+        var settingsButton = (Button)Field(form, "settingsButton");
+        var settingsMenu = (ContextMenuStrip)Field(form, "settingsMenu");
+        Assert(settingsButton.Visible && settingsButton.Enabled && settingsButton.Parent!.ClientRectangle.Contains(settingsButton.Bounds),
+            "The settings action is missing or clipped.");
+        try
+        {
+            settingsButton.PerformClick();
+            Application.DoEvents();
+            Assert(settingsMenu.Visible, "The settings action did not open its menu.");
+            Assert(startup.Visible && startup.Parent!.ClientRectangle.Contains(startup.Bounds),
+                "The startup preference is not reachable inside settings.");
+            var help = new[] { "Download ChatGPT", "Download Claude", "Ask from your phone", "About Claudgar" };
+            Assert(help.All(text => settingsMenu.Items.OfType<ToolStripMenuItem>().Any(item => item.Text == text && item.Enabled)),
+                "The existing help destinations are missing from settings.");
+        }
+        finally
+        {
+            settingsMenu.Close();
+            Application.DoEvents();
+        }
+        Assert(!startup.Visible, "Closing settings leaves its preferences visible.");
+        Console.WriteLine("PASS Hidden instruction banner and startup preference; settings retains startup and help destinations.");
     }
 
     private static void VerifyStreamlinedActions(Form form)
@@ -648,12 +764,12 @@ internal static class Program
 
     private static (string Output, int Width, int Height, float Scale, bool NoGame, string Section) ParseArguments(string[] args)
     {
-        if (args.Length == 0) throw new ArgumentException("Usage: Claudgar.Preview <output.png> [--width 1440] [--height 960] [--scale 2] [--no-game]");
+        if (args.Length == 0) throw new ArgumentException("Usage: Claudgar.Preview <output.png> [--width 1440] [--height 960] [--scale 2] [--section home] [--no-game]");
         var width = 1440;
         var height = 960;
         var scale = 1f;
         var noGame = false;
-        var section = "character";
+        var section = "home";
         for (var i = 1; i < args.Length; i++)
         {
             if (args[i] == "--no-game") { noGame = true; continue; }
@@ -670,8 +786,8 @@ internal static class Program
         }
         if (width < 950 || height < 620 || width > 3840 || height > 2160 || scale is < 1 or > 2)
             throw new ArgumentOutOfRangeException(nameof(args), "Use widths 950–3840, heights 620–2160, and scales 1–2.");
-        if (!new[] { "character", "quests", "talents", "inventory", "equipment" }.Contains(section))
-            throw new ArgumentException("Choose character, quests, talents, inventory, or equipment for --section.");
+        if (!new[] { "home", "character", "quests", "talents", "inventory", "equipment" }.Contains(section))
+            throw new ArgumentException("Choose home, character, quests, talents, inventory, or equipment for --section.");
         return (args[0], width, height, scale, noGame, section);
     }
 }
