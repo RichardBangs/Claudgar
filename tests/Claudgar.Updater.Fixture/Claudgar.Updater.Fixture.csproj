@@ -5,7 +5,6 @@
     <AssemblyName>Claudgar.Updater.Fixture</AssemblyName>
     <Product>Claudgar</Product>
     <PublishSingleFile>true</PublishSingleFile>
-    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/Claudgar.Core/Claudgar.Core.csproj" />
