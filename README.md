@@ -4,6 +4,8 @@ Get AI advice based on your WoW Forever character's quests, talents, inventory,
 and gear. Claudgar installs a game addon and connects your saved character data
 to ChatGPT or Claude.
 
+![Claudgar showing a saved character and options to ask ChatGPT or Claude](docs/images/claudgar-screenshot.png)
+
 **You'll need:** Windows 10/11 (64-bit), WoW Forever Beta, and the
 [ChatGPT desktop app](https://learn.chatgpt.com/docs/quickstart) (Work mode)
 or [Claude Desktop](https://claude.com/download).
