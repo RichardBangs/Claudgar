@@ -61,28 +61,29 @@ try
 
     if (args.Length == 3)
     {
-        // Show the game button's actual 20px artwork beside an enlarged nearest-neighbor view.
-        using var small = new Bitmap(20, 20, PixelFormat.Format32bppArgb);
+        const int displaySize = 24; // Match the portrait size in MinimapButton.lua.
+        // Show the game button's artwork beside an enlarged nearest-neighbor view.
+        using var small = new Bitmap(displaySize, displaySize, PixelFormat.Format32bppArgb);
         using (var graphics = Graphics.FromImage(small))
         {
             graphics.CompositingMode = CompositingMode.SourceCopy;
             graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             graphics.PixelOffsetMode = PixelOffsetMode.Half;
-            graphics.DrawImage(texture, new Rectangle(0, 0, 20, 20));
+            graphics.DrawImage(texture, new Rectangle(0, 0, displaySize, displaySize));
         }
-        using var preview = new Bitmap(260, 220, PixelFormat.Format32bppArgb);
+        using var preview = new Bitmap(300, 260, PixelFormat.Format32bppArgb);
         using (var graphics = Graphics.FromImage(preview))
         {
             graphics.Clear(Color.FromArgb(25, 30, 38));
             graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
             graphics.PixelOffsetMode = PixelOffsetMode.Half;
-            graphics.DrawImage(small, new Rectangle(10, 100, 20, 20));
-            graphics.DrawImage(small, new Rectangle(50, 10, 200, 200));
+            graphics.DrawImage(small, new Rectangle(10, 118, displaySize, displaySize));
+            graphics.DrawImage(small, new Rectangle(50, 10, displaySize * 10, displaySize * 10));
         }
         var previewPath = Path.GetFullPath(args[2]);
         Directory.CreateDirectory(Path.GetDirectoryName(previewPath)!);
         preview.Save(previewPath, ImageFormat.Png);
-        Console.WriteLine("20px preview: " + previewPath);
+        Console.WriteLine($"{displaySize}px preview: " + previewPath);
     }
     Console.WriteLine($"Verified {size}x{size} BGRA TGA; {transparent} transparent pixels: {output}");
     return 0;

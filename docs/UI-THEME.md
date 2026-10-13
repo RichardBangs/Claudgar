@@ -45,7 +45,19 @@ The character banner and app header stay compact so the assistant choices receiv
 
 Saved exports refresh on timestamp/size/path changes, checked every three seconds and on window focus. Setup health is checked read-only on focus and every thirty seconds. Corrective actions appear only for detected issues. Minimising hides the app in its tray; reopening restores its previous window state. Windows startup opens quietly in the tray; manual launch shows the window.
 
-The addon minimap uses `addon/Claudgar/Textures/ClaudgarPortrait.tga`, a 64×64 uncompressed 32-bit BGRA texture with transparent corners, packaged from the same pixel portrait. `tools/Claudgar.AddonTextureBuilder` uses nearest-neighbor sampling, verifies every packaged pixel, and can render a 20px preview. It creates no new artwork. The game button retains its existing border, highlight, tooltip, secure click/combat guards, and saved drag position. The texture is embedded with the addon and delivered by owned-file setup/version updates.
+The addon minimap uses `addon/Claudgar/Textures/ClaudgarPortrait.tga`, a 64×64 uncompressed 32-bit BGRA texture with transparent corners. Its dedicated source, `addon/artwork/claudgar-minimap.png`, was edited from the desktop portrait using the built-in ImageGen tool: a closer face crop, broader hair and beard shapes, larger pixel blocks, and no painted square frame. The desktop portrait and Windows icons retain their existing artwork. The minimap portrait is displayed at 24×24, centered inside the existing 32px button. `tools/Claudgar.AddonTextureBuilder` uses nearest-neighbor sampling, verifies every packaged pixel, and can render a 24px preview. It creates no new artwork. The game button retains its existing border, highlight, tooltip, secure click/combat guards, and saved drag position. The texture is embedded with the addon and delivered by owned-file setup/version updates. For a local rebuild with the same app version, use **Repair setup**, then manually reload the game UI.
+
+Regenerate the addon texture and inspect its small-size preview without starting the game:
+
+```powershell
+dotnet run --project tools/Claudgar.AddonTextureBuilder -c Release -- addon/artwork/claudgar-minimap.png addon/Claudgar/Textures/ClaudgarPortrait.tga .tmp/minimap-preview.png
+```
+
+Final minimap edit prompt (the generated result is a chunky pixel-art interpretation, not a validated 16×16 sprite):
+
+```text
+Use case: style-transfer. Redraw the attached Claudgar minimap portrait with MUCH LARGER PIXELS. The current edit is still far too detailed for a 24px game UI icon. Keep the same circular silhouette, silver-haired bearded mage, blue eyes and tiny navy/gold collar, no frame. Radically simplify the face into true early 8-bit pixel art: EXACTLY sixteen logical pixels wide and sixteen high, displayed enlarged. Every logical pixel is a single solid-color square, all aligned to ONE 16x16 grid across the whole image. A single eye is just ONE blue square, not multiple squares. Hair is one broad off-white shape with just one gray shadow band, never individual strands. Face uses only THREE skin colors, never wrinkles. Beard one white shape with gray edge. 12 flat colors maximum for entire picture. No gradients, texture, smooth outlines or finer decorative pixels. Head and beard nearly fill the icon. Transparent corners outside dark navy round silhouette. Keep the character recognizable but prioritize tiny-size readability and visibly chunky square blocks. Deliver a single square sprite, no labels or mockup.
+```
 
 Pixel portrait generation used the built-in ImageGen tool with this final prompt:
 
