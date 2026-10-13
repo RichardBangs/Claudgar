@@ -10,6 +10,8 @@ public sealed class CodexConfigurationInstaller
 {
     private const string BeginMarker = "# BEGIN CLAUDGAR MANAGED MCP";
     private const string EndMarker = "# END CLAUDGAR MANAGED MCP";
+    private const int MaximumConfigBytes = 4 * 1024 * 1024;
+    public const string ReloadAdvice = "Keep Claudgar running. If its tools are missing, restart the MCP connection in ChatGPT/Codex settings or fully quit and reopen the chat app; restarting only Claudgar does not reload the chat's tools.";
     private static readonly UTF8Encoding Utf8 = new(false, true);
 
     public static string DefaultConfigPath
@@ -30,14 +32,11 @@ public sealed class CodexConfigurationInstaller
         try
         {
             SafeFiles.RejectReparsePoints(path);
-            var original = File.Exists(path) ? SafeFiles.ReadLimited(path, 4 * 1024 * 1024) : null;
+            var original = File.Exists(path) ? SafeFiles.ReadLimited(path, MaximumConfigBytes) : null;
             var text = original is null ? "" : Utf8.GetString(original);
             var merged = Merge(text, port);
             if (!merged.Succeeded || !merged.Changed) return new(merged.Succeeded, false, merged.Message, path);
-            var current = File.Exists(path) ? SafeFiles.ReadLimited(path, 4 * 1024 * 1024) : null;
-            if ((original is null) != (current is null) || (original is not null && !original.AsSpan().SequenceEqual(current)))
-                return new(false, false, "Codex configuration changed during setup. It was preserved; try setup again.", path);
-            SafeFiles.WriteAtomic(path, Utf8.GetBytes(merged.Content), backup: true);
+            GuardedConfigurationWriter.Write(path, Utf8.GetBytes(merged.Content), original, MaximumConfigBytes);
             return new(true, true, merged.Message, path);
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or DecoderFallbackException)
@@ -46,11 +45,34 @@ public sealed class CodexConfigurationInstaller
         }
     }
 
+    /// <summary>Re-read the actual config; a successful past installation is not a live health check.</summary>
+    public InstallationResult Check(int port, string? configFilePath = null)
+    {
+        var path = configFilePath ?? DefaultConfigPath;
+        try
+        {
+            SafeFiles.RejectReparsePoints(path);
+            if (!File.Exists(path))
+                return new(false, false, "Codex configuration is missing. Run setup repair, then restart the chat app.", path);
+            var merged = Merge(Utf8.GetString(SafeFiles.ReadLimited(path, MaximumConfigBytes)), port);
+            if (!merged.Succeeded) return new(false, false, merged.Message, path);
+            return merged.Changed
+                ? new(false, false, "Claudgar's Codex connection is missing or points to a different port. Run setup repair, then restart the chat app.", path)
+                : new(true, false, "Connection configured. " + ReloadAdvice, path);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or DecoderFallbackException)
+        {
+            return new(false, false, "Codex connection could not be checked: " + error.Message, path);
+        }
+    }
+
     public CodexConfigMergeResult Merge(string text, int port)
     {
         if (port is < 1024 or > 65535) throw new ArgumentOutOfRangeException(nameof(port));
         try
         {
+            if (text.Contains('\0'))
+                return Failure(text, "Codex configuration contains NUL bytes and appears corrupted. It was preserved; restore a valid backup before setup repair.");
             var statements = TomlStatements.Scan(text);
             var currentTable = Array.Empty<string>();
             var serverHeaders = new List<TomlStatements.Statement>();
@@ -102,7 +124,7 @@ public sealed class CodexConfigurationInstaller
                     return Failure(text, "The Claudgar managed MCP block contains user changes. They were preserved.");
                 if (previousPort == port) return new(true, false, text, "Claudgar MCP is already registered.");
                 var updated = text[..begin.Start] + newBlock + text[end.End..];
-                return new(true, true, updated, "Claudgar MCP connection updated. Restart Codex to load the change.");
+                return new(true, true, updated, "Claudgar MCP connection updated. " + ReloadAdvice);
             }
 
             if (serverHeaders.Count == 1)
@@ -115,7 +137,7 @@ public sealed class CodexConfigurationInstaller
                 return Failure(text, "A user-managed MCP server named claudgar already exists. It was preserved; use the app's local URL in that connection.");
             }
             var separator = text.Length == 0 ? "" : (text.EndsWith('\n') ? newline : newline + newline);
-            return new(true, true, text + separator + newBlock, "Claudgar MCP registered. Restart Codex to load the connection.");
+            return new(true, true, text + separator + newBlock, "Claudgar MCP registered. " + ReloadAdvice);
         }
         catch (Exception error) when (error is FormatException or JsonException or ArgumentException)
         {

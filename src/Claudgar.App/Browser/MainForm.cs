@@ -364,9 +364,11 @@ internal sealed class MainForm : Form
     {
         UpdateGameFolderView();
         releaseControls.SetStartupWarning(coordinator.StartupWarning);
-        connection.Text = coordinator.Server.IsRunning ? "●  Ready" : "●  Needs attention";
-        connection.ForeColor = coordinator.Server.IsRunning ? BrowserTheme.Success : BrowserTheme.Warning;
-        connection.AccessibleDescription = coordinator.Server.IsRunning ? "Local service ready" : "Local service is not running. Open settings for connection details.";
+        var needsAttention = !coordinator.Server.IsRunning || setupHealth?.NeedsRepair == true;
+        connection.Text = needsAttention ? "●  Needs attention" : "●  Running";
+        connection.ForeColor = needsAttention ? BrowserTheme.Warning : BrowserTheme.Success;
+        connection.AccessibleDescription = needsAttention ? "Setup needs attention. Open settings for connection details."
+            : "Local service running. Chat client configuration and connection details are available in settings.";
         var lines = new List<string>
         {
             $"CLAUDGAR {BuildInfo.Version}", "", "SETUP & CONNECTION", "",

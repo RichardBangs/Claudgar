@@ -47,9 +47,19 @@ instructions. Keep your PC awake and online, with Claudgar and your chat app run
 - **Missing or old character data?** Check the addon is enabled and the correct
   game folder is selected, then save again.
 - **Chat can't connect?** Keep Claudgar running, choose **Repair setup** in
-  settings, then restart your chat app. Open **Connection details** to check
-  setup status. Alternatively, use **Copy JSON** in the character data view
+  settings, then fully quit and reopen your chat app. In ChatGPT/Codex you can
+  also restart the connection under **Settings → MCP servers**. Restarting
+  Claudgar alone does not reload tools in an already-open chat. Open **Connection
+  details** to check setup status: **configured** means the connection is saved,
+  not that your current chat has loaded it. Claudgar checks for a missing or
+  changed Codex connection every 30 seconds and offers repair without silently
+  replacing your settings. Alternatively, use **Copy JSON** in the character data view
   and paste it into your chat.
+- **Codex reports a corrupt config?** Preserve the broken file and restore a
+  known-good backup first. Claudgar refuses files containing NUL bytes and
+  backs up the config whenever it changes its connection.
+  After restoring an older config, run **Repair setup** and restart your chat app
+  so the Claudgar connection is included again.
 
 ## Privacy and support
 

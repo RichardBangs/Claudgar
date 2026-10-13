@@ -64,26 +64,28 @@ internal sealed class ApplicationCoordinator : IAsyncDisposable
 
     public async Task InitializeAsync(bool forceAddonRepair = false)
     {
+        // Be ready for a chat client's discovery request before registering its connection.
+        try { await Server.StartAsync(Settings.Port); ServerError = null; }
+        catch (Exception error) { ServerError = "The local connection could not start: " + error.Message; }
         await Task.Run(() =>
         {
             ConfigureStartup();
             InstallComponents(forceAddonRepair);
         });
-        try { await Server.StartAsync(Settings.Port); ServerError = null; }
-        catch (Exception error) { ServerError = "The local connection could not start: " + error.Message; }
     }
 
     public Task<SetupHealth> CheckSetupHealthAsync()
     {
         string[] directories;
         lock (settingsLock) directories = Settings.GameDirectories.ToArray();
-        var report = SetupReport;
         var serviceIssue = Server.IsRunning ? null : ServerError ?? "The local connection is unavailable. Repair setup to reconnect.";
         return Task.Run(() =>
         {
+            if (SetupReport is { } report)
+                SetupReport = report with { Codex = new CodexConfigurationInstaller().Check(Settings.Port, report.Codex.Path) };
             ClaudeReport = claudeSetup.Check(Settings.Port);
             ClaudeCodeReport = claudeCodeSetup.Check(Settings.Port);
-            var health = healthChecker.Check(directories, report, serviceIssue);
+            var health = healthChecker.Check(directories, SetupReport, serviceIssue);
             // Each chat client is optional and independent: an absent client is reported as success.
             var clientIssue = ClaudeReport is { Succeeded: false } claude
                 ? !claude.Helper.Succeeded ? claude.Helper.Message : claude.Configuration.Message

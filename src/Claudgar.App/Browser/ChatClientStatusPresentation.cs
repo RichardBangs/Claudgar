@@ -44,5 +44,5 @@ internal static class ChatClientStatusPresentation
         return lines;
     }
 
-    private static string State(bool succeeded) => succeeded ? "ready" : "needs repair";
+    private static string State(bool succeeded) => succeeded ? "configured" : "needs repair";
 }
