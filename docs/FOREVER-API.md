@@ -1,15 +1,17 @@
-# Forever Beta API notes
+# Forever API notes
 
-This implementation targets World of Warcraft: Forever Beta only. Sources were
-reviewed on 5 October 2026. The user's first game export exposed a logout-time
-capture bug. Regression checks now exercise the actual Lua addon sources against
-simulated APIs; a fresh in-game export still verifies compatibility with the beta.
+This implementation targets World of Warcraft: Forever. Release sources were
+reviewed on 5 November 2026 against Blizzard client `1.60.1.70790`, mirrored at
+[commit `eac30af`](https://github.com/Gethe/wow-ui-source/tree/eac30af597e5aaa43a60f6675ef5fdcea100375f).
+The user's first beta export exposed a logout-time capture bug. Regression
+checks exercise the actual Lua addon sources against simulated APIs; a fresh
+user-generated release export is still required for in-game verification.
 
 The authoritative material used for collector signatures is Blizzard-authored
 interface source and generated API documentation, publicly mirrored in the
 [`forever` branch of Gethe/wow-ui-source](https://github.com/Gethe/wow-ui-source/tree/forever).
 This is a community mirror of primary client code, rather than an official
-Blizzard hosting service. Branch contents can change with beta updates; source
+Blizzard hosting service. Branch contents can change with client updates; source
 review does not establish runtime availability or unrestricted access.
 
 ## Client boundary
@@ -20,7 +22,7 @@ routes its game-specific implementations with `AllowLoadGameType camelot`.
 Claudgar supplies only `Claudgar_Camelot.toc`, declares this game type and interface
 `16001`, and additionally requires a `1.x` client version with interface number
 `16000 <= interface < 20000` at runtime. It has no Retail/Classic collectors or
-fallback TOCs. The interface family guard permits subsequent Forever beta builds
+fallback TOCs. The interface family guard permits subsequent Forever builds
 without pinning a build number. `WOW_PROJECT_ID` is deliberately not used to
 distinguish Forever from the shared Mainline API family.
 
@@ -29,7 +31,8 @@ the [Questie author's source audit](https://github.com/Questie/Questie/blob/mast
 whose documented source baseline is Blizzard client `1.60.1 / 69913`, commit
 `70ef1b2fd78061a73f886c4a1e79dc5b5cff6d5e`. The implementation checks the actual
 client's capabilities; this baseline is evidence for the interface family, not a
-claim that build 69913 is the newest beta build on the review date.
+claim that the historical beta build 69913 is current. The release source baseline
+above retains Camelot routing and the collector API signatures used here.
 
 ## Collectors
 
@@ -58,7 +61,7 @@ All collection is deferred during combat. API calls are isolated and every
 returned primitive/table is checked with `issecretvalue` before comparisons,
 iteration or persistence. If that check is absent, collectors fail closed with
 unavailable coverage. No secret values, arbitrary API objects or raw exception
-strings are written. Missing APIs and unregistered beta events become concise
+strings are written. Missing APIs and unregistered events become concise
 coverage warnings; one failed collector cannot prevent the others from saving.
 
 Snapshots refresh after login and relevant character, quest, trait, bag,

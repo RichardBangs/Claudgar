@@ -40,7 +40,7 @@ internal static class Program
         var coordinator = Activator.CreateInstance(coordinatorType)!;
         if (!noGame)
             coordinatorType.GetProperty("Installations")!.SetValue(coordinator,
-                new[] { new GameInstallation(@"C:\Preview\World of Warcraft\_classic_beta_", @"C:\Preview\World of Warcraft", "1.60.1.69913") });
+                new[] { new GameInstallation(Path.Combine(@"C:\Preview\World of Warcraft", GameDiscovery.ClientDirectoryName), @"C:\Preview\World of Warcraft", "1.60.1.0") });
         Console.WriteLine("Preparing isolated controls.");
         using var form = (Form)Activator.CreateInstance(formType, coordinator)!;
         // Show the control's normal appearance without running setup or changing registration.
@@ -154,7 +154,7 @@ internal static class Program
         var heading = (Control)Field(form, "characterHeading");
         var setCharacter = heading.GetType().GetMethod("SetCharacter");
         if (setCharacter is not null) setCharacter.Invoke(heading, [snapshot]);
-        else heading.Text = "Aeloria  ·  Classic Beta PvE\nLevel 22 Human Priest";
+        else heading.Text = "Aeloria  ·  Forever Demo\nLevel 22 Human Priest";
         var assistantHome = Field(form, "assistantHome");
         assistantHome.GetType().GetMethod("SetCharacter")!.Invoke(assistantHome, [snapshot]);
         var connection = (Control)Field(form, "connection");

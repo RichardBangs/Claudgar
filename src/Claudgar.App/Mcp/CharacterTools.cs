@@ -11,7 +11,7 @@ internal sealed class CharacterTools(ExportRepository repository)
     private const string CharacterIdHelp = "Exact opaque characterId returned by list_characters.";
 
     [McpServerTool(Name = "list_characters", ReadOnly = true, Destructive = false, OpenWorld = false, UseStructuredContent = true)]
-    [Description("Call this first. Lists saved WoW Forever Beta characters with opaque characterIds, section coverage, and save freshness; exports are reread on each call. If several characters fit the user's request, ask which one (name, realm, class, level) rather than guessing. Data is saved only after an in-game /reload or logout.")]
+    [Description("Call this first. Lists saved WoW Forever characters with opaque characterIds, section coverage, and save freshness; exports are reread on each call. If several characters fit the user's request, ask which one (name, realm, class, level) rather than guessing. Data is saved only after an in-game /reload or logout.")]
     public JsonObject ListCharacters() => repository.ListCharacters();
 
     [McpServerTool(Name = "get_character", ReadOnly = true, Destructive = false, OpenWorld = false, UseStructuredContent = true)]

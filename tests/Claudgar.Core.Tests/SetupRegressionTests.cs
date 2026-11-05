@@ -151,58 +151,6 @@ internal static class SetupRegressionTests
                    updated.RootElement.GetProperty("UserPreference").GetString() == "keep", "An unrelated setting was discarded.");
     });
 
-    public static void ForeverValidationDiscriminatesSharedBetaSlot() => InTemporaryFolder(folder =>
-    {
-        var game = Path.Combine(folder, GameDiscovery.ClientDirectoryName);
-        Directory.CreateDirectory(game);
-        File.WriteAllBytes(Path.Combine(game, "WowB.exe"), []); // Presence-only fixture, never executed.
-        var discovery = new GameDiscovery();
-        void Manifest(string version, string product = "wow_classic_beta", int active = 1) =>
-            File.WriteAllText(Path.Combine(folder, ".build.info"),
-                "Branch!STRING:0|Version!STRING:0|Product!STRING:0|Active!DEC:1\n" +
-                "eu|12.1.0.69875|wow|1\n" + $"eu|{version}|{product}|{active}\n");
-        foreach (var version in new[] { "1.60.1.69913", "1.60.9.76543" })
-        {
-            Manifest(version);
-            Assert(discovery.Validate(folder).IsValid && discovery.Validate(game).Installation?.Version == version,
-                "A Forever patch/build in its supported client family was rejected.");
-        }
-        foreach (var version in new[] { "1.15.8.69913", "5.5.2.69913", "12.1.0.69913" })
-        {
-            Manifest(version);
-            Assert(!discovery.Validate(game).IsValid, "A different beta sharing the product slot was accepted.");
-        }
-        Manifest("1.60.1.69913", "wow_classic_era");
-        Assert(!discovery.Validate(game).IsValid, "A different product was accepted.");
-        Manifest("1.60.1.69913", active: 0);
-        Assert(!discovery.Validate(game).IsValid, "An inactive install row was accepted.");
-        Manifest("1.60.1.69913");
-        var retail = Path.Combine(folder, "_retail_");
-        Directory.CreateDirectory(retail);
-        Assert(!discovery.Validate(retail).IsValid, "Explicit Retail selection was accepted as Forever.");
-    });
-
-    public static void GameDiscoveryFindsRootOrBetaDirectory() => InTemporaryFolder(folder =>
-    {
-        var root = Path.Combine(folder, "World of Warcraft");
-        var beta = Path.Combine(root, GameDiscovery.ClientDirectoryName);
-        Directory.CreateDirectory(beta);
-        File.WriteAllBytes(Path.Combine(beta, "WowB.exe"), []);
-        File.WriteAllText(Path.Combine(root, ".build.info"),
-            "Version!STRING:0|Product!STRING:0|Active!DEC:1\n1.60.1.69913|wow_classic_beta|1\n");
-        var discovery = new GameDiscovery();
-        var found = discovery.Discover([root, beta, root + Path.DirectorySeparatorChar]);
-        Assert(found.Count(game => game.GameDirectory == beta) == 1,
-            "Root and beta candidates did not resolve to one installation.");
-        Assert(discovery.SuggestDirectory([root]) == beta && discovery.SuggestDirectory([beta]) == beta,
-            "Manual selection did not start in the existing beta directory.");
-        File.Delete(Path.Combine(beta, "WowB.exe"));
-        Assert(!discovery.Discover([root]).Any(game => game.GameDirectory == beta),
-            "An incomplete install was accepted during discovery.");
-        Assert(discovery.SuggestDirectory([root]) == beta,
-            "An incomplete install should still be offered as a manual-selection starting point.");
-    });
-
     public static void InTemporaryFolder(Action<string> test)
     {
         var tempRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), ".tmp", "core-tests"))

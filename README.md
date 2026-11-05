@@ -6,7 +6,7 @@ to ChatGPT or Claude.
 
 ![Claudgar showing a saved character and options to ask ChatGPT or Claude](docs/images/claudgar-screenshot.png)
 
-**You'll need:** Windows 10/11 (64-bit), WoW Forever Beta, and the
+**You'll need:** Windows 10/11 (64-bit), WoW Forever, and the
 [ChatGPT desktop app](https://learn.chatgpt.com/docs/quickstart) (Work mode)
 or [Claude Desktop](https://claude.com/download).
 
@@ -22,6 +22,12 @@ or [Claude Desktop](https://claude.com/download).
 4. **Restart your chat app.**
 5. **Ask:** “Use Claudgar to check my character's gear.” Include your character
    name if you have several characters.
+
+**Moving from the beta:** Claudgar uses the released `_forever_` client. A saved
+beta folder selection moves to a verified release installation under the same
+World of Warcraft folder. If needed, choose the release folder in settings.
+Enable the addon there and save each release character with `/reload` or logout;
+beta character exports are kept separate.
 
 ## Everyday use
 

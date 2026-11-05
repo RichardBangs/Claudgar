@@ -158,9 +158,9 @@ internal static class StartupAndAddonVersionTests
         var root = Path.Combine(folder, name);
         var game = Path.Combine(root, GameDiscovery.ClientDirectoryName);
         Directory.CreateDirectory(game);
-        File.WriteAllBytes(Path.Combine(game, "WowB.exe"), []); // Presence-only fixture, never executed.
+        File.WriteAllBytes(Path.Combine(game, "Wow.exe"), []); // Presence-only fixture, never executed.
         File.WriteAllText(Path.Combine(root, ".build.info"),
-            "Version!STRING:0|Product!STRING:0|Active!DEC:1\n1.60.1.69913|wow_classic_beta|1\n");
+            "Version!STRING:0|Product!STRING:0|Active!DEC:1\n1.60.1.70790|wowf|1\n");
         return new GameDiscovery().Validate(game).Installation ?? throw new InvalidOperationException("Invalid game fixture.");
     }
 

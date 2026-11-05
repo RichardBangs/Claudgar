@@ -12,7 +12,10 @@ local slots = {}
 for index, name in ipairs(slotNames) do slots[name] = index end
 slots.AmmoSlot, slots.TabardSlot = 0, 19
 
-function MockGame.New(saved)
+function MockGame.New(saved, client)
+    -- Keep the original baseline and allow release/flavor tests to supply the
+    -- exact GetBuildInfo result before the real Client.lua module is loaded.
+    client = client or { version = "1.60.0", build = "65000", interface = 16001 }
     local game = {
         now = 0, serverTime = 1750000000, inWorld = false, live = false,
         combat = false, reads = 0, guid = "Player-1-100", name = "Tester",
@@ -44,7 +47,7 @@ function MockGame.New(saved)
     ClaudgarDB = saved
     SlashCmdList = {}
     issecretvalue = function(value) return value == game.secret end
-    GetBuildInfo = function() return "1.60.0", "65000", "Oct 1 2026", 16001 end
+    GetBuildInfo = function() return client.version, client.build, "fixture", client.interface end
     GetLocale = function() return "enUS" end
     GetTime = function() return game.now end
     GetServerTime = function() return Read(game.serverTime + math.floor(game.now), game.serverTime) end

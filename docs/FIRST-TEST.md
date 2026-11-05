@@ -1,12 +1,12 @@
 # Release manual acceptance
 
-Use this guide to check a fresh export in Forever Beta. The first user test found
+Use this guide to check a fresh export in the released Forever client. The first user test found
 that collecting during logout replaced live data with default API values; the
 addon now saves its latest in-world snapshot. Automated reader and simulated Lua
 regression tests cover this bug, while game compatibility requires this manual check.
 
 Run the checks against the same packaged executable that is intended for the
-release. Record the app version, beta build, client versions, and each outcome.
+release. Record the app version, game build, chat client versions, and each outcome.
 Claude, phone, clean-account, upgrade, and in-game acceptance remain manual
 release gates until their results are recorded. This guide does not imply they
 have passed. Every real World of Warcraft launch, interaction, and reload below
@@ -16,10 +16,12 @@ is performed by the user; development checks use simulated data only.
 
 1. Start `dist/win-x64/Claudgar.exe` on Windows 10/11 x64. No separate .NET
    runtime installation is required.
-2. If no Forever Beta installation is detected, the welcome screen highlights
+2. If no Forever installation is detected, the welcome screen highlights
    **CHOOSE GAME FOLDER**. Select the World of Warcraft install root or its
-   current `_classic_beta_` folder. That shared folder name does not establish
-   Forever support; Claudgar additionally checks the active product/version.
+   `_forever_` folder. Claudgar checks the active `wowf` product, Forever version,
+   and executable. An old beta selection should move to a verified release
+   installation under the same root. Verify that old beta exports are not shown
+   as release characters; each release character needs a fresh saved export.
 3. Check that addon, skill, and ChatGPT connection setup succeeded. Existing
    conflicting user-owned files/configuration are preserved and explained here.
    The app does not request administrator privileges. Open the settings gear
@@ -28,8 +30,8 @@ is performed by the user; development checks use simulated data only.
    selecting a saved character. The normal character screen opens with the
    assistant choices; verify **View character data** and **Back** preserve the
    selected character and that suggested questions copy without sending.
-4. Start Forever Beta and verify Claudgar appears and is enabled in the AddOns
-   list. For a changed beta interface number, the game's out-of-date addon toggle
+4. Start Forever and verify Claudgar appears and is enabled in the AddOns
+   list. For a changed interface number, the game's out-of-date addon toggle
    may be needed until the TOC is updated; the runtime guard still requires Forever.
 5. Enter the world. `/claudgar status` reports collector state. `/claudgar snapshot`
    requests another snapshot. `/reload` or logout is needed to write it to disk.
@@ -223,10 +225,10 @@ the development-machine result.
 
 ## Information to report if something fails
 
-Send the app and client versions, exact beta version/build, the section coverage/warnings visible in the
+Send the app and client versions, exact game version/build, the section coverage/warnings visible in the
 app, `/claudgar status` output, any game Lua error, and the app's setup message.
 The relevant export is the account-wide
-`_classic_beta_/WTF/Account/<account>/SavedVariables/Claudgar.lua`.
+`_forever_/WTF/Account/<account>/SavedVariables/Claudgar.lua`.
 If sharing an export or JSON, it contains your character data; remove anything
 you do not want to share. Credentials are not collected.
 

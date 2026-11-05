@@ -4,11 +4,11 @@ using System.Text.Json;
 
 namespace Claudgar.Core.Setup;
 
-/// <summary>Discovers only the Forever beta, which currently occupies the shared Classic beta product slot.</summary>
+/// <summary>Discovers the released Forever client, independently of other installed WoW flavors.</summary>
 public sealed class GameDiscovery
 {
-    public const string ClientDirectoryName = "_classic_beta_";
-    public const string ProductCode = "wow_classic_beta";
+    public const string ClientDirectoryName = "_forever_";
+    public const string ProductCode = "wowf";
 
     public IReadOnlyList<GameInstallation> Discover(IEnumerable<string>? savedDirectories = null)
     {
@@ -29,8 +29,8 @@ public sealed class GameDiscovery
             try
             {
                 var root = Path.GetFullPath(candidate).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                var beta = Path.Combine(root, ClientDirectoryName);
-                if (Directory.Exists(beta)) return beta;
+                var release = Path.Combine(root, ClientDirectoryName);
+                if (Directory.Exists(release)) return release;
                 if (Directory.Exists(root)) return root;
             }
             catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException) { }
@@ -41,7 +41,21 @@ public sealed class GameDiscovery
     private static IEnumerable<string> CandidateDirectories(IEnumerable<string>? savedDirectories)
     {
         var candidates = new List<string>();
-        candidates.AddRange(savedDirectories ?? []);
+        foreach (var saved in savedDirectories ?? [])
+        {
+            if (string.IsNullOrWhiteSpace(saved)) continue;
+            // Old settings can point at a removed beta on a nonstandard drive. Use only
+            // its parent as a discovery hint; the beta itself is never a valid client.
+            try
+            {
+                var path = Path.GetFullPath(saved).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                if (string.Equals(Path.GetFileName(path), "_classic_beta_", StringComparison.OrdinalIgnoreCase) &&
+                    Path.GetDirectoryName(path) is { } parent)
+                    candidates.Add(parent);
+            }
+            catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException) { }
+            candidates.Add(saved);
+        }
         candidates.AddRange(CommonRoots());
         candidates.AddRange(BattleNetRoots());
         if (OperatingSystem.IsWindows()) candidates.AddRange(RegistryRoots());
@@ -57,11 +71,11 @@ public sealed class GameDiscovery
             var game = string.Equals(Path.GetFileName(selection), ClientDirectoryName, StringComparison.OrdinalIgnoreCase)
                 ? selection : Path.Combine(selection, ClientDirectoryName);
             var root = Path.GetDirectoryName(game)!;
-            if (!Directory.Exists(game)) return new(null, "Select the World of Warcraft folder or its _classic_beta_ folder.");
-            if (!File.Exists(Path.Combine(game, "WowB.exe")))
-                return new(null, "The selected beta folder does not contain WowB.exe. Complete its Battle.net installation first.");
+            if (!Directory.Exists(game)) return new(null, "Select the World of Warcraft folder or its _forever_ folder.");
+            if (!File.Exists(Path.Combine(game, "Wow.exe")))
+                return new(null, "The selected Forever folder does not contain Wow.exe. Complete its Battle.net installation first.");
             var manifestPath = Path.Combine(root, ".build.info");
-            if (!File.Exists(manifestPath)) return new(null, "The install's .build.info file is missing; this folder cannot be identified as Forever beta.");
+            if (!File.Exists(manifestPath)) return new(null, "The install's .build.info file is missing; this folder cannot be identified as WoW Forever.");
             var text = System.Text.Encoding.UTF8.GetString(SafeFiles.ReadLimited(manifestPath, 1024 * 1024));
             var rows = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
             if (rows.Length < 2) return new(null, "The install's .build.info file is incomplete.");
@@ -77,13 +91,13 @@ public sealed class GameDiscovery
                 if (fields.Length <= Math.Max(activeIndex, Math.Max(productIndex, versionIndex))) continue;
                 if (!string.Equals(fields[productIndex].Trim(), ProductCode, StringComparison.OrdinalIgnoreCase) || fields[activeIndex].Trim() != "1") continue;
                 var version = fields[versionIndex].Trim();
-                // The product slot previously hosted other Classic betas. Product and folder alone are insufficient.
-                // 1.60 identifies Forever; no exact patch or build is pinned. See docs/API-SOURCES.md.
+                // Require the verified release product and client family together; a folder name alone
+                // is insufficient. No exact patch or build is pinned. See docs/API-SOURCES.md.
                 if (!Version.TryParse(version, out var parsed) || parsed.Major != 1 || parsed.Minor != 60)
-                    return new(null, "The beta product is installed, but its version is not the Forever 1.60 client family.");
+                    return new(null, "The Forever product is installed, but its version is not the supported 1.60 client family.");
                 return new(new(game, root, version), null);
             }
-            return new(null, "The selected install has no active World of Warcraft: Forever beta product. Retail and other Classic clients are unsupported.");
+            return new(null, "The selected install has no active World of Warcraft: Forever release product. Beta, Retail, and other Classic clients are unsupported.");
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
         {

@@ -1,31 +1,31 @@
 # Implementation sources
 
-Sources were reviewed on 5 October 2026. Runtime/game verification is deliberately
-left to the user; documented APIs and a successful C# build do not establish that
-the untested addon works on a particular beta build.
+Forever release compatibility was reviewed on 5 November 2026. Runtime/game
+verification is left to the user; source review and automated tests do not
+establish that the addon works in a running release client.
 
 ## Forever client
 
 See [FOREVER-API.md](FOREVER-API.md) for the exact Blizzard-authored Forever UI
-source files, API decisions, collector details, and beta limitations.
+source files, API decisions, collector details, and runtime limitations.
 
-- [Blizzard Forever Beta announcement](https://worldofwarcraft.blizzard.com/en-us/news/24304160/)
-  establishes the separate Forever Beta client.
+- [Blizzard's Forever launch announcement](https://worldofwarcraft.blizzard.com/en-us/news/24303862/world-of-warcraft-forever-whats-next)
+  announces the global release on 4 November 2026.
 - [Blizzard-authored UI sources, Forever branch](https://github.com/Gethe/wow-ui-source/tree/forever)
   are the API implementation reference. The branch's Camelot files matter;
   Retail/Classic recipes are not treated as proof of Forever support.
-- [Forever simulator developer repository](https://github.com/ProfetGit/forever-sim)
-  identifies the 1.60 client family and its shared beta product slot.
-- [ArcUI developer repository](https://github.com/ArcSim/ArcUI/blob/main/CLAUDE.md)
-  points Forever API work at the Forever UI source branch.
-- [WoW API source tooling](https://github.com/Nighthawk42/wow_api_mcp)
-  documents version/flavor discrimination for the shared Classic beta slot.
+- [Pinned Forever client version](https://github.com/Gethe/wow-ui-source/blob/eac30af597e5aaa43a60f6675ef5fdcea100375f/version.txt)
+  records `1.60.1.70790`, the release source baseline reviewed on 5 November.
 
-The current shared installation directory is `_classic_beta_`; that label alone
-is insufficient. Detection requires an active `wow_classic_beta` product row
-with the Forever 1.60 family in `.build.info` and the beta executable. The addon
-uses its Camelot-specific TOC and independently checks the Forever version.
-No exact beta patch/build number is pinned. A future client family or product
+Read-only inspection of the installed Blizzard `.build.info` on 5 November
+confirmed active product `wowf`, version `1.60.1.70790`, and the `_forever_`
+client directory. Detection requires that release product, a Forever 1.60
+version, and its executable; a folder name alone is insufficient. The old
+`_classic_beta_` / `wow_classic_beta` installation is not a release source.
+An existing beta selection can migrate to a verified release client under the
+same World of Warcraft root; beta character exports are not copied or merged.
+The addon retains its Camelot-specific TOC and independently checks the Forever
+version. No exact patch/build number is pinned. A future client family or product
 rename requires an explicit detection update.
 
 ## Windows distribution

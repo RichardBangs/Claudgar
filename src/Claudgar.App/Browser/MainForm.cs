@@ -63,7 +63,7 @@ internal sealed class MainForm : Form
     public MainForm(ApplicationCoordinator coordinator)
     {
         this.coordinator = coordinator;
-        Text = "Claudgar · WoW Forever Beta";
+        Text = "Claudgar · WoW Forever";
         AutoScaleMode = AutoScaleMode.Dpi;
         AutoScaleDimensions = new SizeF(96, 96);
         Width = 1440; Height = 960; MinimumSize = new Size(1120, 750);
@@ -76,7 +76,7 @@ internal sealed class MainForm : Form
         var wordmark = new FlowLayoutPanel { AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, FlowDirection = FlowDirection.TopDown,
             WrapContents = false, Anchor = AnchorStyles.Left, Margin = Padding.Empty };
         wordmark.Controls.Add(title);
-        wordmark.Controls.Add(new Label { Text = "WoW Forever Beta", AutoSize = true, ForeColor = BrowserTheme.Muted,
+        wordmark.Controls.Add(new Label { Text = "WoW Forever", AutoSize = true, ForeColor = BrowserTheme.Muted,
             Font = new Font("Segoe UI", 9), Margin = new Padding(2, 0, 0, 0) });
         var header = new TableLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink,
             ColumnCount = 4, RowCount = 1, Padding = new Padding(20, 16, 20, 16), Margin = Padding.Empty };
@@ -329,7 +329,7 @@ internal sealed class MainForm : Form
         {
             using var picker = new FolderBrowserDialog
             {
-                Description = "Choose the World of Warcraft folder or its _classic_beta_ folder.",
+                Description = "Choose the World of Warcraft folder or its _forever_ folder.",
                 UseDescriptionForTitle = true,
                 SelectedPath = new GameDiscovery().SuggestDirectory(coordinator.Settings.GameDirectories),
                 ShowNewFolderButton = false
@@ -383,8 +383,8 @@ internal sealed class MainForm : Form
         if (coordinator.ServerError is not null) lines.Add(coordinator.ServerError);
         if (coordinator.StartupWarning is not null) lines.Add(coordinator.StartupWarning);
         if (coordinator.Installations.Count == 0)
-            lines.Add("No Forever Beta installation was selected. Choose your game folder to install the addon.");
-        foreach (var game in coordinator.Installations) lines.Add($"Forever Beta {game.Version}\n{game.GameDirectory}");
+            lines.Add("No Forever installation was selected. Choose your game folder to install the addon.");
+        foreach (var game in coordinator.Installations) lines.Add($"Forever {game.Version}\n{game.GameDirectory}");
         if (coordinator.SetupReport is { } report)
         {
             lines.Add(""); lines.Add("Addon setup:");
@@ -392,7 +392,7 @@ internal sealed class MainForm : Form
         }
         lines.AddRange(["", "CHAT CLIENTS", ""]);
         lines.AddRange(ChatClientStatusPresentation.Lines(coordinator.SetupReport, coordinator.ClaudeReport, coordinator.ClaudeCodeReport));
-        lines.AddRange(["FIRST USE", "1. Keep Claudgar running and start Forever Beta. Enable Claudgar in the AddOns menu.",
+        lines.AddRange(["FIRST USE", "1. Keep Claudgar running and start Forever. Enable Claudgar in the AddOns menu.",
             "2. Enter the world, then /reload or log out so SavedVariables are written.",
             "3. Your saved data appears automatically. Select your character, then open ChatGPT or Claude to ask a question. Suggested questions copy to your clipboard.",
             "4. After setup, restart ChatGPT, fully quit and reopen Claude Desktop, or start a new Claude Code session. Ask it about your Forever character.",

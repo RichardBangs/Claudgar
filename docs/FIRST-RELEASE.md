@@ -1,5 +1,7 @@
 # Claudgar first release plan
 
+This is the historical first-release acceptance plan. Starting with `v0.1.2`, matching version tags automatically publish after the Windows checks pass and all assets are uploaded. The workflow uses `docs/releases/<tag>.md` when present, otherwise generated notes; manual draft publication described below is the previous process.
+
 The first release should let a Windows user download Claudgar, connect ChatGPT or Claude Desktop, ask about their saved WoW Forever character, and receive future app updates automatically. Enable launching Claudgar at Windows sign-in by default, with an easy way to turn it off. Keep the portable Windows x64 app and the existing five data sections.
 
 The implementation is now available in `dist\win-x64\Claudgar.exe` at version `0.1.0`. Automated checks use synthetic data and temporary installations. Real client, phone, in-game, clean-account, and published-release upgrade acceptance remain open below. Interpret "next boot" as the next Claudgar launch; installing immediately means confirming a Claudgar restart.

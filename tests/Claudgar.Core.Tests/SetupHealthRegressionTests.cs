@@ -7,9 +7,9 @@ internal static class SetupHealthRegressionTests
     {
         var game = Path.Combine(folder, GameDiscovery.ClientDirectoryName);
         Directory.CreateDirectory(game);
-        File.WriteAllBytes(Path.Combine(game, "WowB.exe"), []); // Presence-only fixture; never executed.
+        File.WriteAllBytes(Path.Combine(game, "Wow.exe"), []); // Presence-only fixture; never executed.
         File.WriteAllText(Path.Combine(folder, ".build.info"),
-            "Version!STRING:0|Product!STRING:0|Active!DEC:1\n1.60.1.69913|wow_classic_beta|1\n");
+            "Version!STRING:0|Product!STRING:0|Active!DEC:1\n1.60.1.70790|wowf|1\n");
         var addon = Path.Combine(game, "Interface", "AddOns", "Claudgar");
         var content = Encoding.UTF8.GetBytes("## Title: Claudgar\n");
         var checker = new SetupHealthChecker(new Dictionary<string, byte[]> { ["Claudgar.toc"] = content });
@@ -42,7 +42,7 @@ internal static class SetupHealthRegressionTests
         var offline = checker.Check([game], report, "The local connection is unavailable.");
         Assert(offline.NeedsRepair && offline.Message == "The local connection is unavailable.", "An offline local service was hidden.");
 
-        File.Delete(Path.Combine(game, "WowB.exe"));
+        File.Delete(Path.Combine(game, "Wow.exe"));
         var invalid = checker.Check([game], report);
         Assert(invalid.NeedsGameFolder && !invalid.NeedsRepair, "An invalid game folder should request a new folder.");
         var deleted = checker.Check([Path.Combine(folder, "deleted-install")], report);

@@ -74,7 +74,7 @@ of an empty quest log or inventory.
 
 IDs, quantities, ranks, and positions are JSON numbers; flags are booleans;
 names/tokens/links are strings. Optional unavailable values are omitted, never
-invented as zero. Secret/restricted beta values are not persisted. The addon
+invented as zero. Secret/restricted game values are not persisted. The addon
 normalizes each field to its declared type before saving.
 
 ## Character data

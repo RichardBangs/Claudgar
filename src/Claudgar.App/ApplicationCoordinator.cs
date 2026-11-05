@@ -103,20 +103,14 @@ internal sealed class ApplicationCoordinator : IAsyncDisposable
         var found = discovery.Discover(Settings.GameDirectories);
         lock (settingsLock)
         {
-            if (Settings.GameDirectories.Count > 0)
-                found = found.Where(i => Settings.GameDirectories.Contains(i.GameDirectory, StringComparer.OrdinalIgnoreCase)).ToArray();
-            if (Settings.GameDirectories.Count == 0 && found.Count > 1)
-            {
-                Warning = "Several Forever Beta installations were found. Choose the game folder you want Claudgar to use.";
-                found = [];
-            }
+            var selection = GameInstallationSelection.Resolve(found, Settings.GameDirectories);
+            found = selection.Installations;
+            if (selection.RequiresChoice)
+                Warning = "Several Forever installations were found. Choose the game folder you want Claudgar to use.";
             Installations = found;
+            Settings = Settings with { GameDirectories = selection.GameDirectories.ToList() };
+            exportDirectories.RemoveWhere(directory => !Settings.GameDirectories.Contains(directory, StringComparer.OrdinalIgnoreCase));
             foreach (var installation in found) exportDirectories.Add(installation.GameDirectory);
-            Settings = Settings with
-            {
-                GameDirectories = Settings.GameDirectories.Concat(found.Select(i => i.GameDirectory))
-                    .Distinct(StringComparer.OrdinalIgnoreCase).ToList()
-            };
             PersistSettings();
         }
         SetupReport = setup.Install(found, Settings.Port, forceAddonRepair: forceAddonRepair);

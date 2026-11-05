@@ -1,4 +1,4 @@
-name: Verify and prepare release
+name: Verify and publish release
 
 on:
   push:
@@ -63,18 +63,19 @@ jobs:
             dist/win-x64/Claudgar.exe
             dist/win-x64/Claudgar.exe.sha256
             dist/win-x64/LICENSE
-  draft-release:
+  release:
     if: startsWith(github.ref, 'refs/tags/')
     needs: windows
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: Claudgar-win-x64
           path: release
-      - name: Prepare draft release
+      - name: Publish verified release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -83,6 +84,12 @@ jobs:
           if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true || { echo 'Published releases are preserved.'; exit 1; }
           else
-            gh release create "$RELEASE_TAG" --draft --title "Claudgar $RELEASE_TAG" --generate-notes
+            notes_file="docs/releases/$RELEASE_TAG.md"
+            if [ -f "$notes_file" ]; then
+              gh release create "$RELEASE_TAG" --draft --verify-tag --title "Claudgar $RELEASE_TAG" --notes-file "$notes_file"
+            else
+              gh release create "$RELEASE_TAG" --draft --verify-tag --title "Claudgar $RELEASE_TAG" --generate-notes
+            fi
           fi
           gh release upload "$RELEASE_TAG" release/Claudgar.exe release/Claudgar.exe.sha256 release/LICENSE --clobber
+          gh release edit "$RELEASE_TAG" --draft=false

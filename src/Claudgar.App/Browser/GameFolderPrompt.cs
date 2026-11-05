@@ -47,7 +47,7 @@ internal sealed class GameFolderPrompt : UserControl
     public void SetSearching(bool searching, string? explanation = null)
     {
         message.Text = searching
-            ? "Looking for your WoW Forever Beta installation…"
-            : explanation ?? "Choose your WoW Forever Beta folder to get started.";
+            ? "Looking for your WoW Forever installation…"
+            : explanation ?? "Choose your WoW Forever folder to get started.";
     }
 }

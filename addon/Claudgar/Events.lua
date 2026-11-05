@@ -106,7 +106,7 @@ frame:SetScript("OnUpdate", function()
     if not ns.Snapshot.ready or (not dueAt and not warmupIndex) then return end
     if ns.Snapshot.IsRestricted() then return end
     local now = GetTime()
-    -- Some beta APIs initialize after entering the world. Refresh once, then
+    -- Some client APIs initialize after entering the world. Refresh once, then
     -- retry incomplete sections a bounded number of times; ordinary events keep
     -- snapshots current after this warm-up without polling all collectors forever.
     while warmupIndex and warmupSteps[warmupIndex]

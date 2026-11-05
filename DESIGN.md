@@ -1,6 +1,6 @@
 # Claudgar Design
 
-Claudgar gives ChatGPT, Claude Desktop, and Claude Code saved character context from WoW Forever Beta only. Adapt to changing game APIs without pinning an exact patch/build. The first version includes all five data sections, a complete local data browser, Windows startup registration, and staged app/addon updates.
+Claudgar gives ChatGPT, Claude Desktop, and Claude Code saved character context from WoW Forever only. Adapt to changing game APIs without pinning an exact patch/build. The first version includes all five data sections, a complete local data browser, Windows startup registration, and staged app/addon updates.
 
 ## User flow
 
@@ -9,6 +9,12 @@ Claudgar gives ChatGPT, Claude Desktop, and Claude Code saved character context 
 3. Enable the addon in Forever, enter the world, and use the Claudgar face beside the minimap or `/reload`/logout to save an export. Ask in ChatGPT's Codex mode with local tools, a Claude Desktop chat with local MCP support, or a Claude Code session.
 
 Detect game/export paths; prompt only when missing or ambiguous. Bundle dependencies, preserve configuration, and update only Claudgar-owned files.
+
+Target the release `_forever_` directory, validated against the active `wowf`
+product and Forever 1.60 version in Blizzard's `.build.info`. Migrate an old
+`_classic_beta_` selection only to a verified release client under the same
+installation root. Read release exports from that selected client; never merge
+beta snapshots into the released character list.
 
 Keep Claudgar running in the background. The main window focuses on opening ChatGPT or Claude and copying suggested questions for the selected character. **View character data** reveals the existing section tabs and full export details; **Back** returns to the assistant choices. The settings gear holds startup preferences, separate client connection details, downloads, phone help, and About. Launch on startup defaults to enabled and starts quietly in the tray; its checkbox persists an explicit disabled choice. Normal launches show the window, and the tray provides reopen/exit actions. Keep save age and incomplete/older-data status concise in the main view, with actionable export failures in Details. Service readiness or a client request does not establish a successful character query. Restart the relevant chat app after configuration changes.
 
@@ -65,7 +71,7 @@ The shared versioned prototype lives in [DATA-CONTRACT.md](docs/DATA-CONTRACT.md
 1. Define the shared data prototype and safe reader; implement identity, quests, talents, inventory, and equipment collectors using Forever client sources.
 2. Add MCP, skill, portable automatic setup, and the full exported-data browser.
 3. Compile and package with `build.ps1`, updating only `dist/win-x64`. Embed the native connector, addon, skill, portrait, and license. Generate a checksum and use `Version.props` for app, MCP, staged addon metadata, release tag, and comparison versions. Keep temporary checks/packaging under `.tmp` and compiler caches separate.
-4. Run core, presentation, simulated Lua, native connector, and isolated updater checks. The Windows GitHub workflow verifies a matching version tag and prepares a draft release with executable, checksum, and license; publishing remains a release step.
+4. Run core, presentation, simulated Lua, native connector, and isolated updater checks. The Windows GitHub workflow verifies a matching version tag, builds and checks the package, uploads the executable, checksum, and license to a draft, then publishes automatically. Add release notes at `docs/releases/<tag>.md` before tagging; otherwise GitHub generates them. Already published releases are preserved.
 5. The user completes [manual acceptance](docs/FIRST-TEST.md): real exports, both desktop clients, same-conversation refresh, phone pairing, startup choices, and upgrades/recovery. Automated checks use fixtures and never launch or interact with World of Warcraft. Real Claude, phone, clean-account, and game acceptance must be recorded separately; implementation is not evidence that those checks passed.
 
 Later: plugin distribution and bank/mail/auction data. Gameplay automation is outside scope. Track release readiness in [FIRST-RELEASE.md](docs/FIRST-RELEASE.md).

@@ -615,6 +615,7 @@ Test("a left drag started in combat cannot reload when released after combat", f
     Equal(game.reloads, 1)
 end)
 
+dofile(TEST_ROOT .. "/ClientCompatibilityTests.lua")(MockGame, Test, Equal, LiveSections)
 dofile(TEST_ROOT .. "/CharacterStatsTests.lua")(MockGame, Test, Equal, LiveSections)
 dofile(TEST_ROOT .. "/MinimapPortraitTests.lua")(MockGame, Test, Equal)
 

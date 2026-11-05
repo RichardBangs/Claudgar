@@ -5,7 +5,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>Claudgar</AssemblyName>
     <Product>Claudgar</Product>
-    <Description>Browse saved WoW Forever Beta character data and share it with ChatGPT, Claude Desktop, or Claude Code.</Description>
+    <Description>Browse saved WoW Forever character data and share it with ChatGPT, Claude Desktop, or Claude Code.</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PublishSingleFile>true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>

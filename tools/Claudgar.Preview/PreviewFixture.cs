@@ -9,7 +9,7 @@ internal static class PreviewFixture
     {
         var identity = new JsonObject
         {
-            ["name"] = "Aeloria", ["realm"] = "Classic Beta PvE", ["level"] = 22,
+            ["name"] = "Aeloria", ["realm"] = "Forever Demo", ["level"] = 22,
             ["raceName"] = "Human", ["className"] = "Priest", ["classToken"] = "PRIEST",
             ["faction"] = "Alliance", ["zone"] = "Stormwind City", ["subZone"] = "The Canals"
         };
