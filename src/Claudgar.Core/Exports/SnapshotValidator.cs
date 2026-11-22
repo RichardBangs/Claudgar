@@ -96,9 +96,13 @@ public sealed class SnapshotValidator
                 if (error is not null) safeSections[sectionName]!["error"] = error.DeepClone();
             }
             var identity = safeSections["character"]?["data"] as JsonObject;
-            if (identity is null || string.IsNullOrWhiteSpace(ReadString(identity["name"])) ||
-                string.IsNullOrWhiteSpace(ReadString(identity["realm"])))
-                throw Invalid("A character must include its name and realm.");
+            if (identity is null || string.IsNullOrWhiteSpace(ReadString(identity["name"])))
+                throw Invalid("A character must include its name.");
+            if (identity.ContainsKey("realm") && string.IsNullOrWhiteSpace(ReadString(identity["realm"])))
+                throw Invalid("character.realm must be nonempty when included.");
+            if ((identity.ContainsKey("guid") || !identity.ContainsKey("realm")) &&
+                string.IsNullOrWhiteSpace(ReadString(identity["guid"])))
+                throw Invalid("A character needs a nonempty GUID. Older exports may omit it when a realm is present.");
             characters.Add(key, new JsonObject { ["characterKey"] = key, ["sections"] = safeSections });
         }
         return new ValidatedExport(safeClient, characters);
@@ -113,7 +117,7 @@ public sealed class SnapshotValidator
                     throw Invalid("character.level must be a positive integer.");
                 if (status == "complete")
                 {
-                    foreach (var field in new[] { "guid", "name", "realm", "className", "classToken", "raceName", "raceToken", "faction", "locale", "zone" })
+                    foreach (var field in new[] { "guid", "name", "className", "classToken", "raceName", "raceToken", "faction", "locale", "zone" })
                         if (ReadString(data[field]) is null) throw Invalid($"Complete character data lacks {field}.");
                     foreach (var field in new[] { "level", "classId", "raceId" })
                         if (!TryInteger(data[field], out var id) || id < 1) throw Invalid($"Complete character data lacks a positive {field}.");

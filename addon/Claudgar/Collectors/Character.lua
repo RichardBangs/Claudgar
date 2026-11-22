@@ -2,13 +2,15 @@ local _, ns = ...
 local Api = ns.Api
 
 function ns.Collectors.character(context)
-    if not Api.Require(context, { "UnitGUID", "UnitName", "GetRealmName", "UnitLevel", "UnitClass", "UnitRace" }) then
+    if not Api.Require(context, { "UnitGUID", "UnitName" }) then
         return {}
     end
     local data = {}
     data.guid = Api.Typed(context, Api.Call(context, "UnitGUID", "player"), "string", "GUID", true)
     data.name = Api.Typed(context, Api.Call(context, "UnitName", "player"), "string", "Character name", true)
-    data.realm = Api.Typed(context, Api.Call(context, "GetRealmName"), "string", "Realm", true)
+    -- Forever can deliberately return a blank realm even after login.
+    local realm = Api.Typed(context, Api.Call(context, "GetRealmName"), "string", "Realm")
+    if realm and realm:find("%S") then data.realm = realm end
     data.level = Api.Typed(context, Api.Call(context, "UnitLevel", "player"), "number", "Level", true)
     data.className, data.classToken, data.classId = Api.Call(context, "UnitClass", "player")
     data.raceName, data.raceToken, data.raceId = Api.Call(context, "UnitRace", "player")

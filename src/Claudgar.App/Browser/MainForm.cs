@@ -272,8 +272,9 @@ internal sealed class MainForm : Form
             var id = item["characterId"]?.ToString();
             if (id is null) continue;
             var name = identity?["name"]?.ToString() ?? "Unnamed character";
-            var realm = identity?["realm"]?.ToString() ?? "Unknown realm";
-            var detail = $"{realm} · Level {identity?["level"]} {identity?["className"]}";
+            var realm = identity?["realm"]?.ToString();
+            var detail = $"Level {identity?["level"]} {identity?["className"]}";
+            if (!string.IsNullOrWhiteSpace(realm)) detail = realm + " · " + detail;
             var accountId = item["accountId"]?.ToString() ?? "";
             detail = "Account " + (accountId.Length > 12 ? accountId[^6..] : accountId) + " · " + detail;
             if (filter.Length > 0 && !(name + " " + detail).Contains(filter, StringComparison.OrdinalIgnoreCase)) continue;
@@ -433,12 +434,19 @@ internal sealed class MainForm : Form
         var classLine = $"Level {identity?["level"]} · {identity?["className"]}";
         var flags = TextFormatFlags.EndEllipsis | TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine;
         var duplicateName = characterData.OfType<JsonObject>().Count(c => c["character"]?["name"]?.ToString() == item.Name) > 1;
-        var displayName = duplicateName ? item.Name + " · " + identity?["realm"] : item.Name;
-        if (duplicateName && characterData.OfType<JsonObject>().Count(c =>
-            c["character"]?["name"]?.ToString() == item.Name && c["character"]?["realm"]?.ToString() == identity?["realm"]?.ToString()) > 1)
+        var realm = identity?["realm"]?.ToString();
+        var displayName = item.Name;
+        if (duplicateName && string.IsNullOrWhiteSpace(realm))
+            displayName += " · " + (item.Id.Length > 6 ? item.Id[^6..] : item.Id);
+        else if (duplicateName)
         {
-            var account = item.Data["accountId"]?.ToString() ?? "Unknown";
-            displayName += " · " + (account.Length > 6 ? account[^6..] : account);
+            displayName += " · " + realm;
+            if (characterData.OfType<JsonObject>().Count(c =>
+                c["character"]?["name"]?.ToString() == item.Name && c["character"]?["realm"]?.ToString() == realm) > 1)
+            {
+                var account = item.Data["accountId"]?.ToString() ?? "Unknown";
+                displayName += " · " + (account.Length > 6 ? account[^6..] : account);
+            }
         }
         TextRenderer.DrawText(e.Graphics, displayName, bold, new Rectangle(e.Bounds.X + D(12), e.Bounds.Y + D(13), e.Bounds.Width - D(20), D(25)), selected ? BrowserTheme.Accent : BrowserTheme.Ink, flags);
         TextRenderer.DrawText(e.Graphics, classLine, small, new Rectangle(e.Bounds.X + D(12), e.Bounds.Y + D(41), e.Bounds.Width - D(20), D(22)), BrowserTheme.Muted, flags);

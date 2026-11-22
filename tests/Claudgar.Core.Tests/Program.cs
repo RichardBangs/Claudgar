@@ -8,6 +8,7 @@ var tests = new (string Name, Action Run)[]
     ("Literal parsing and UTF-8 escapes", ParserLiterals),
     ("Executable Lua and resource limits are rejected", ParserRejectsCode),
     ("All sections share a validated data contract", ValidateFixture),
+    ("Characters with a hidden realm and older realm-based identities validate", CharacterIdentity),
     ("Saved quest names and talent layout remain compatible with older exports", PresentationMetadata),
     ("Equipment artwork and character stats are optional validated metadata", EquipmentMetadata),
     ("Wrong clients, versions, coverage and field types are rejected", InvalidSchemas),
@@ -123,6 +124,36 @@ static void ValidateFixture()
     var failed = new SnapshotValidator().Validate(failedDocument);
     Assert(failed.Characters.Values.Single()["sections"]!["talents"]!["error"]!.GetValue<string>() == "Collector failed in the current game state.",
         "The collector failure explanation was lost.");
+}
+static void CharacterIdentity()
+{
+    var document = ParsedFixture();
+    var character = document["characters"]!["Player-1-00001234"]!["sections"]!["character"]!;
+    var identity = character["data"]!.AsObject();
+    var validator = new SnapshotValidator();
+    identity.Remove("realm");
+    foreach (var status in new[] { "complete", "partial" })
+    {
+        character["status"] = status;
+        var section = validator.Validate(document).Characters.Values.Single()["sections"]!["character"]!;
+        Assert(section["status"]!.GetValue<string>() == status, "Hidden realm changed character coverage.");
+        Assert(!section["data"]!.AsObject().ContainsKey("realm"), "A hidden realm must stay omitted.");
+    }
+
+    identity["name"] = " ";
+    Reject(() => validator.Validate(document));
+    identity["name"] = "Arwyn";
+    identity["guid"] = " ";
+    Reject(() => validator.Validate(document));
+    identity.Remove("guid");
+    Reject(() => validator.Validate(document));
+    identity["realm"] = "Forever Beta";
+    _ = validator.Validate(document); // Legacy partial capture with name and realm.
+    character["status"] = "complete";
+    Reject(() => validator.Validate(document));
+    identity["guid"] = "Player-1-00001234";
+    identity["realm"] = " ";
+    Reject(() => validator.Validate(document));
 }
 static void InvalidSchemas()
 {

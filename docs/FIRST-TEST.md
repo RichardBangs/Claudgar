@@ -50,7 +50,8 @@ is performed by the user; development checks use simulated data only.
 ## Browse every section
 
 1. Focus the app, wait for its automatic update, and select your character. Verify its name,
-   realm, level, class, faction, and location in **Character**.
+   level, class, faction, and location in **Character**. On builds that hide the realm,
+   check that the minimap button still saves and that an existing character appears only once.
 2. In **Quests**, double-click **Active** and a quest. Compare its objective text
    and progress to the quest log. Browse **Completed** IDs and any saved names;
    verify that title search works and unknown names remain labeled as missing.

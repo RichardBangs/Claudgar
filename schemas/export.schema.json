@@ -151,7 +151,8 @@
       "type": "object",
       "properties": {
         "guid": {
-          "type": "string"
+          "type": "string",
+          "pattern": "\\S"
         },
         "name": {
           "type": "string",
@@ -218,9 +219,10 @@
           }
         }
       },
-      "required": [
-        "name",
-        "realm"
+      "required": ["name"],
+      "anyOf": [
+        { "required": ["guid"] },
+        { "required": ["realm"] }
       ],
       "additionalProperties": false
     },
@@ -649,7 +651,7 @@
             "properties": {
               "data": {
                 "required": [
-                  "guid", "name", "realm", "className", "classToken", "raceName", "raceToken",
+                  "guid", "name", "className", "classToken", "raceName", "raceToken",
                   "faction", "locale", "zone", "level", "classId", "raceId"
                 ],
                 "properties": {

@@ -85,6 +85,13 @@ normalizes each field to its declared type before saving.
 in copper. `zone` and `subZone` use the client locale. Some optional map or XP
 fields may be absent while zoning or at a level cap.
 
+The addon requires a readable player GUID and name. Forever build 71037 can
+return an empty realm name during normal play. In that case the addon omits
+`realm` even in a complete character section. It keeps the existing storage key
+when the GUID identifies a single saved character, so earlier realm-qualified
+keys and the companion's character IDs continue to work. A first save without
+a realm uses the player GUID as the storage key. [Build 71037 API observations](https://github.com/Spotnick2/TitanLayer/issues/7)
+
 Optional `stats` is a string-to-number map of observed player totals, separate
 from the `stats` item-modifier maps in inventory/equipment. Older exports may
 omit it. Unsupported APIs or absent optional values stay omitted; readable zero

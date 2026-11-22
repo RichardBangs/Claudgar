@@ -132,7 +132,7 @@ Test("a second character never inherits the previous character sections", functi
     second.money, second.completed = 10, { 81 }
     second.equipment, second.bagItems = {}, {}
     second:Login()
-    Equal(second:Record("Player-1-100"), previous)
+    Equal(ClaudgarDB.characters[previous.characterKey], previous)
     Equal(second:Record().sections.character.data.name, "Second")
     Equal(second:Record().sections.character.data.money, 10)
     Equal(#second:Record().sections.quests.data.completed, 1)
@@ -616,6 +616,7 @@ Test("a left drag started in combat cannot reload when released after combat", f
 end)
 
 dofile(TEST_ROOT .. "/ClientCompatibilityTests.lua")(MockGame, Test, Equal, LiveSections)
+dofile(TEST_ROOT .. "/CharacterIdentityTests.lua")(MockGame, Test, Equal)
 dofile(TEST_ROOT .. "/CharacterStatsTests.lua")(MockGame, Test, Equal, LiveSections)
 dofile(TEST_ROOT .. "/MinimapPortraitTests.lua")(MockGame, Test, Equal)
 

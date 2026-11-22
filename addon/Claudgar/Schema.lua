@@ -141,9 +141,3 @@ function ns.Schema.Section(data, status, observedAt, warnings, errorMessage)
         error = errorMessage,
     }
 end
-
-function ns.Schema.CharacterKey(realm, guid)
-    -- GUIDs already identify a character; realm keeps the key readable. The
-    -- companion adds installation/account isolation without exporting paths.
-    return realm .. ":" .. guid
-end

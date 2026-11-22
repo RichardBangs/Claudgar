@@ -268,8 +268,8 @@ function MockGame.New(saved, client)
         self:EnterWorld()
         self:Advance(1.1)
     end
-    function game:Record(guid)
-        return ClaudgarDB.characters[self.realm .. ":" .. (guid or self.guid)]
+    function game:Record()
+        return ClaudgarDB.characters[self.ns.Snapshot.lastCharacterKey]
     end
     function game:MouseDownMinimap(mouseButton)
         local button = assert(self.ns.MinimapButton.frame, "Minimap button was not created")
